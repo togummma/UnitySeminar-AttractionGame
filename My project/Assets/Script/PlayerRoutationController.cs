@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerRotationController : MonoBehaviour
 {
     public Transform cameraTransform; // カメラのTransform
-    public float rotationSpeed = 5.0f; // プレイヤーの回転速度 (角速度)
+    public float rotationSpeed = 1.0f; // プレイヤーの回転速度 (角速度)
 
     void Update()
     {
