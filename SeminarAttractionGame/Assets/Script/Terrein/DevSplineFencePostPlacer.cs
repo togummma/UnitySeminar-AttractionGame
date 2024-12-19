@@ -5,7 +5,6 @@ using UnityEngine.Splines;
 [ExecuteInEditMode]
 public class DevSplineFencePostPlacer : MonoBehaviour
 {
-    public SplineContainer splineContainer; // スプラインの参照
     public GameObject postPrefab;           // 配置するPostのPrefab
     public float minimumSpacing = 2.0f;     // 最小間隔
     public Vector3 rotationOffset = Vector3.zero; // オブジェクトの向きを調整するためのオフセット（Euler角）
@@ -13,9 +12,24 @@ public class DevSplineFencePostPlacer : MonoBehaviour
     [ContextMenu("Place Posts")]
     public void PlacePosts()
     {
-        if (splineContainer == null || postPrefab == null || minimumSpacing <= 0)
+        if (postPrefab == null || minimumSpacing <= 0)
         {
-            Debug.LogError("Invalid configuration: Ensure SplineContainer, PostPrefab, and MinimumSpacing are set.");
+            Debug.LogError("Invalid configuration: Ensure PostPrefab and MinimumSpacing are set.");
+            return;
+        }
+
+        // "Spline" オブジェクトを探す
+        Transform splineTransform = transform.Find("Spline");
+        if (splineTransform == null)
+        {
+            Debug.LogError("No 'Spline' child object found.");
+            return;
+        }
+
+        SplineContainer splineContainer = splineTransform.GetComponent<SplineContainer>();
+        if (splineContainer == null)
+        {
+            Debug.LogError("The 'Spline' child object does not contain a SplineContainer component.");
             return;
         }
 

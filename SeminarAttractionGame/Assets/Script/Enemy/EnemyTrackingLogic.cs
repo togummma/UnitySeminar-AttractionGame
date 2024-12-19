@@ -24,9 +24,12 @@ public class EnemyTrackingLogic : MonoBehaviour {
 
         // NavMeshPathを計算
         if (NavMesh.CalculatePath(transform.position, playerPosition, NavMesh.AllAreas, navMeshPath)) {
-            Debug.Log("Path calculated with " + navMeshPath.corners.Length + " corners.");
+            if (navMeshPath.corners.Length > 0) {
+            } else {
+                Debug.LogWarning("Path is empty, no valid route found.");
+            }
         } else {
-            Debug.LogWarning("Failed to calculate NavMesh path!");
+            Debug.LogError("Failed to calculate NavMesh path!");
         }
     }
 }

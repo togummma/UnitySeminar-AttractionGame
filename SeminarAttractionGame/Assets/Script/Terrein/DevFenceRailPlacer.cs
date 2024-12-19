@@ -4,7 +4,6 @@ using System.Linq; // LINQを使用
 [ExecuteInEditMode]
 public class DevFenceRailPlacer : MonoBehaviour
 {
-    public Transform postsParent;  // Postsオブジェクトの参照
     public GameObject railPrefab;  // Railのプレハブ
     public Vector3 rotationOffset = Vector3.zero; // 方向補正のためのオフセット (Euler角)
     public Vector3 scaleAdjustment = Vector3.one; // スケール補正
@@ -12,9 +11,17 @@ public class DevFenceRailPlacer : MonoBehaviour
     [ContextMenu("Place Rails")]
     public void PlaceRails()
     {
-        if (postsParent == null || railPrefab == null)
+        if (railPrefab == null)
         {
-            Debug.LogError("Invalid configuration: Ensure PostsParent and RailPrefab are set.");
+            Debug.LogError("Invalid configuration: Ensure RailPrefab is set.");
+            return;
+        }
+
+        // "Posts" オブジェクトを探す
+        Transform postsParent = transform.Find("Posts");
+        if (postsParent == null)
+        {
+            Debug.LogError("No 'Posts' child object found.");
             return;
         }
 
