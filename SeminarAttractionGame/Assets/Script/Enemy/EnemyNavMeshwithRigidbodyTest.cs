@@ -59,10 +59,10 @@ public class EnemyNavMeshwithRigidbodyTest : MonoBehaviour {
             // 移動
             rb.MovePosition(transform.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
 
-            // 回転
+            // 回転（進行方向に向ける）
             if (direction != Vector3.zero) {
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
-                rb.MoveRotation(Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * 5f));
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f);
             }
         }
     }
