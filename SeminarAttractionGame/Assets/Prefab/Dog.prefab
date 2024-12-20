@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4877633053281410604}
   m_Layer: 0
   m_Name: Dog
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,7 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f58f801d574efc4abe12fd3df1eb056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSmoothTime: 0.1
 --- !u!1001 &4622049993437556276
 PrefabInstance:
   m_ObjectHideFlags: 0

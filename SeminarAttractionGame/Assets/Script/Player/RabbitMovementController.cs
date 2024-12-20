@@ -9,6 +9,8 @@ public class RabbitMovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
+    private bool isStopped = false; // 移動停止フラグ
+
 
     void Start()
     {
@@ -17,6 +19,8 @@ public class RabbitMovement : MonoBehaviour
 
     void Update()
     {
+        if (isStopped) return; // 停止中なら処理を中断
+
         // 接地判定 (足元に球を置いてチェック)
         isGrounded = Physics.CheckSphere(transform.position, 0.2f, groundLayer);
 
@@ -44,5 +48,11 @@ public class RabbitMovement : MonoBehaviour
             Vector3 jumpDirection = transform.forward; // 向いている方向に飛ぶ
             rb.AddForce((jumpDirection + Vector3.up) * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    public void Stop()
+    {
+        isStopped = true; // 停止フラグを設定
+        rb.velocity = Vector3.zero;
     }
 }

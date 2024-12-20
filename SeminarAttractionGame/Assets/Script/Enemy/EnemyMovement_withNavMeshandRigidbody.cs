@@ -3,14 +3,19 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
-public class EnemyNavMeshwithRigidbodyTest : MonoBehaviour {
+public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
+{
     private NavMeshAgent navMeshAgent;
     private Rigidbody rb;
 
-    void Awake() {
+    private bool isStopped = false; // 停止フラグ
+
+    void Awake()
+    {
         // NavMeshAgentコンポーネントを追加または取得
         navMeshAgent = GetComponent<NavMeshAgent>();
-        if (navMeshAgent == null) {
+        if (navMeshAgent == null)
+        {
             navMeshAgent = gameObject.AddComponent<NavMeshAgent>();
         }
 
@@ -22,7 +27,8 @@ public class EnemyNavMeshwithRigidbodyTest : MonoBehaviour {
 
         // Rigidbodyコンポーネントを追加または取得
         rb = GetComponent<Rigidbody>();
-        if (rb == null) {
+        if (rb == null)
+        {
             rb = gameObject.AddComponent<Rigidbody>();
         }
 
@@ -35,24 +41,30 @@ public class EnemyNavMeshwithRigidbodyTest : MonoBehaviour {
         navMeshAgent.updateRotation = false;
     }
 
-    void Start() {
+    void Start()
+    {
         // プレイヤーのTransformを設定
         Transform playerTransform = FindObjectOfType<PlayerPositionProvider>()?.player;
-        if (playerTransform == null) {
+        if (playerTransform == null)
+        {
             Debug.LogError("PlayerPositionProviderが見つかりません。プレイヤーのTransformを設定してください。");
             enabled = false;
         }
     }
 
-    void Update() {
-        // プレイヤーの位置を取得しNavMeshAgentに設定
-        Vector3 targetPosition = PlayerPositionProvider.GetPlayerPosition();
-        navMeshAgent.SetDestination(targetPosition);
+    void Update()
+    {
+        if (!isStopped) // 停止中でない場合のみ動作
+        {
+            Vector3 targetPosition = PlayerPositionProvider.GetPlayerPosition();
+            navMeshAgent.SetDestination(targetPosition);
+        }
     }
 
-    void FixedUpdate() {
-        // Rigidbodyで移動処理
-        if (navMeshAgent.path.corners.Length > 1) {
+    void FixedUpdate()
+    {
+        if (!isStopped && navMeshAgent.path.corners.Length > 1) // 停止中でない場合のみ動作
+        {
             Vector3 nextPosition = navMeshAgent.path.corners[1]; // 次のコーナー
             Vector3 direction = (nextPosition - transform.position).normalized;
 
@@ -60,10 +72,19 @@ public class EnemyNavMeshwithRigidbodyTest : MonoBehaviour {
             rb.MovePosition(transform.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
 
             // 回転（進行方向に向ける）
-            if (direction != Vector3.zero) {
+            if (direction != Vector3.zero)
+            {
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f);
             }
         }
+    }
+
+    public void Stop()
+    {
+        isStopped = true; // 停止フラグを設定
+        navMeshAgent.isStopped = true; // NavMeshAgentを停止
+        rb.velocity = Vector3.zero;   // Rigidbodyの速度をリセット
+        rb.isKinematic = true;       // Rigidbodyの物理挙動を無効化
     }
 }
