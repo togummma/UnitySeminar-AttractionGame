@@ -1,4 +1,5 @@
 using UnityEngine;
+using System; // Actionを使うため
 
 public class GameStateManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class GameStateManager : MonoBehaviour
 
     public enum GameState { Playing, GameClear, GameOver }
     private GameState currentState;
+
+    // ゲーム状態が変わったときのイベント
+    public event Action<GameState> OnGameStateChanged;
 
     private void Awake()
     {
@@ -27,7 +31,7 @@ public class GameStateManager : MonoBehaviour
     {
         totalGoalItems = GameObject.FindGameObjectsWithTag("GoalItem").Length; // タグでアイテムを取得
         collectedGoalItems = 0;
-        currentState = GameState.Playing;
+        SetState(GameState.Playing); // 初期状態を設定
     }
 
     public void CollectGoalItem()
@@ -42,10 +46,9 @@ public class GameStateManager : MonoBehaviour
     {
         if (collectedGoalItems >= totalGoalItems)
         {
-            currentState = GameState.GameClear;
+            SetState(GameState.GameClear); // 状態を更新
             Debug.Log("ゲームクリア！");
             // ゲームクリア処理をここに記述
-            GameEndProcess.Do();
         }
     }
 
@@ -53,10 +56,17 @@ public class GameStateManager : MonoBehaviour
     {
         if (currentState != GameState.Playing) return;
 
-        currentState = GameState.GameOver;
+        SetState(GameState.GameOver); // 状態を更新
         Debug.Log("ゲームオーバー！");
         // ゲームオーバー処理をここに記述
-        GameEndProcess.Do();
+    }
+
+    private void SetState(GameState newState)
+    {
+        Debug.Log("GameState: " + newState);
+        if (currentState == newState) return;
+        currentState = newState;
+        OnGameStateChanged?.Invoke(newState); // 状態変更イベントを発火
     }
 
     public bool IsState(GameState state)

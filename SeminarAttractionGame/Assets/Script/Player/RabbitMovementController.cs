@@ -11,10 +11,33 @@ public class RabbitMovement : MonoBehaviour
     private bool isGrounded;
     private bool isStopped = false; // 移動停止フラグ
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        
+        // GameStateManagerのイベントを購読
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        }
+    }
+
+
+    void OnDisable()
+    {
+        // GameStateManagerのイベント購読を解除
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+    }
+
+    private void HandleGameStateChanged(GameStateManager.GameState newState)
+    {
+        if (newState == GameStateManager.GameState.GameClear || newState == GameStateManager.GameState.GameOver)
+        {
+            Stop(); // ゲームクリアまたはゲームオーバー時に停止
+        }
     }
 
     void Update()
@@ -53,6 +76,6 @@ public class RabbitMovement : MonoBehaviour
     public void Stop()
     {
         isStopped = true; // 停止フラグを設定
-        rb.velocity = Vector3.zero;
+        rb.velocity = Vector3.zero; // 速度をリセット
     }
 }

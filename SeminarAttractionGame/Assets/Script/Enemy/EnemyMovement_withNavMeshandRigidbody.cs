@@ -19,12 +19,6 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
             navMeshAgent = gameObject.AddComponent<NavMeshAgent>();
         }
 
-        // NavMeshAgentの基本設定
-        navMeshAgent.speed = 3.5f; // 移動速度
-        navMeshAgent.angularSpeed = 120f; // 回転速度
-        navMeshAgent.acceleration = 8f; // 加速度
-        navMeshAgent.stoppingDistance = 0f; // 停止距離
-
         // Rigidbodyコンポーネントを追加または取得
         rb = GetComponent<Rigidbody>();
         if (rb == null)
@@ -43,12 +37,27 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
 
     void Start()
     {
-        // プレイヤーのTransformを設定
-        Transform playerTransform = FindObjectOfType<PlayerPositionProvider>()?.player;
-        if (playerTransform == null)
+        // GameStateManagerのイベントを購読
+        if (GameStateManager.Instance != null)
         {
-            Debug.LogError("PlayerPositionProviderが見つかりません。プレイヤーのTransformを設定してください。");
-            enabled = false;
+            GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        }
+    }
+
+    void OnDisable()
+    {
+        // GameStateManagerのイベント購読を解除
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+    }
+
+    private void HandleGameStateChanged(GameStateManager.GameState newState)
+    {
+        if (newState == GameStateManager.GameState.GameClear || newState == GameStateManager.GameState.GameOver)
+        {
+            Stop(); // ゲームクリアまたはゲームオーバー時に停止
         }
     }
 
@@ -85,10 +94,9 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
         isStopped = true; // 停止フラグを設定
         navMeshAgent.isStopped = true; // NavMeshAgentを停止
         if (!rb.isKinematic)
-    {
-        rb.velocity = Vector3.zero;
-    }
-    
-    rb.isKinematic = true; // 最後に設定
+        {
+            rb.velocity = Vector3.zero;
+        }
+        rb.isKinematic = true; // 最後に設定
     }
 }
