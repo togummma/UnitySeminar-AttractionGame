@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 100px;
+}
+
+.title {
+    -unity-text-align: lower-center;
+    font-size: 100px;
+    -unity-font-style: bold;
+}
+
+.subtitle {
+    font-size: 48px;
+    height: 75px;
+    -unity-text-align: upper-center;
+    white-space: normal;
+    -unity-font-style: normal;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+    align-self: center;
+}
+
+.start-button {
+    height: 124px;
+    font-size: 48px;
+    border-radius: 48px;
+    -unity-font-style: bold;
+    margin-bottom: 20px;
+}
+
+.exit-button {
+    height: 124px;
+    font-size: 48px;
+    border-radius: 48px;
+    -unity-font-style: bold;
+    margin-bottom: 20px;
+}
+
+.last-button {
+    margin-bottom: 0;
+}
