@@ -27,6 +27,3 @@ Thumbs.db
 # Other files
 *.apk
 *.unitypackage
-*.prefab.meta
-*.asset.meta
-*.pbxproj.meta
