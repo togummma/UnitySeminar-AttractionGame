@@ -84,7 +84,11 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
     {
         isStopped = true; // 停止フラグを設定
         navMeshAgent.isStopped = true; // NavMeshAgentを停止
-        rb.velocity = Vector3.zero;   // Rigidbodyの速度をリセット
-        rb.isKinematic = true;       // Rigidbodyの物理挙動を無効化
+        if (!rb.isKinematic)
+    {
+        rb.velocity = Vector3.zero;
+    }
+    
+    rb.isKinematic = true; // 最後に設定
     }
 }

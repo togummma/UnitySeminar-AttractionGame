@@ -7,6 +7,9 @@ public class GameStateManager : MonoBehaviour
     private int totalGoalItems; // ゴールアイテムの総数
     private int collectedGoalItems; // 取得済みのアイテム数
 
+    public enum GameState { Playing, GameClear, GameOver }
+    private GameState currentState;
+
     private void Awake()
     {
         if (Instance == null)
@@ -24,10 +27,13 @@ public class GameStateManager : MonoBehaviour
     {
         totalGoalItems = GameObject.FindGameObjectsWithTag("GoalItem").Length; // タグでアイテムを取得
         collectedGoalItems = 0;
+        currentState = GameState.Playing;
     }
 
     public void CollectGoalItem()
     {
+        if (currentState != GameState.Playing) return;
+
         collectedGoalItems++;
         CheckGameClear();
     }
@@ -36,6 +42,7 @@ public class GameStateManager : MonoBehaviour
     {
         if (collectedGoalItems >= totalGoalItems)
         {
+            currentState = GameState.GameClear;
             Debug.Log("ゲームクリア！");
             // ゲームクリア処理をここに記述
             GameEndProcess.Do();
@@ -44,9 +51,16 @@ public class GameStateManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (currentState != GameState.Playing) return;
+
+        currentState = GameState.GameOver;
         Debug.Log("ゲームオーバー！");
         // ゲームオーバー処理をここに記述
         GameEndProcess.Do();
     }
 
+    public bool IsState(GameState state)
+    {
+        return currentState == state;
+    }
 }
