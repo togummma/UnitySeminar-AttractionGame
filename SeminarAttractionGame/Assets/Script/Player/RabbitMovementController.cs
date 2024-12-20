@@ -14,14 +14,16 @@ public class RabbitMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
+    }
+
+    void OnEnable()
+    {
         // GameStateManagerのイベントを購読
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
     }
-
 
     void OnDisable()
     {

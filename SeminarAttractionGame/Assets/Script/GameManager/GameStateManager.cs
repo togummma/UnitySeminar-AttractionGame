@@ -1,5 +1,6 @@
 using UnityEngine;
 using System; // Actionを使うため
+[DefaultExecutionOrder(-100)] // 優先的に実行
 
 public class GameStateManager : MonoBehaviour
 {

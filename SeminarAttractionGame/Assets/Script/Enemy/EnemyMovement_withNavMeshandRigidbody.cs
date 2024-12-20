@@ -35,7 +35,7 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
         navMeshAgent.updateRotation = false;
     }
 
-    void Start()
+    void OnEnable()
     {
         // GameStateManagerのイベントを購読
         if (GameStateManager.Instance != null)
