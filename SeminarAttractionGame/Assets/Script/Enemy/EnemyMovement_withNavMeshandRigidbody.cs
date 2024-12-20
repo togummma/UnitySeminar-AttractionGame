@@ -55,9 +55,13 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
 
     private void HandleGameStateChanged(GameStateManager.GameState newState)
     {
-        if (newState == GameStateManager.GameState.GameClear || newState == GameStateManager.GameState.GameOver)
+        if (newState == GameStateManager.GameState.Playing)
         {
-            Stop(); // ゲームクリアまたはゲームオーバー時に停止
+            Move(); // プレイ中は動作を許可
+        }
+        else
+        {
+            Stop(); // プレイ中以外は停止
         }
     }
 
@@ -98,5 +102,12 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
             rb.velocity = Vector3.zero;
         }
         rb.isKinematic = true; // 最後に設定
+    }
+
+    public void Move()
+    {
+        isStopped = false; // 停止フラグを解除
+        navMeshAgent.isStopped = false; // NavMeshAgentを再開
+        rb.isKinematic = false; // Rigidbodyを動作可能に設定
     }
 }

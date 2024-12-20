@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; justify-content: center; align-self: center;">
+        <ui:Label name="countdown-label" style="unity-text-align: middle-center; font-size: 240px; color: rgb(255, 255, 255);" />
+    </ui:VisualElement>
+</ui:UXML>

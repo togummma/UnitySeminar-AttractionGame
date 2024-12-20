@@ -36,7 +36,11 @@ public class RabbitMovement : MonoBehaviour
 
     private void HandleGameStateChanged(GameStateManager.GameState newState)
     {
-        if (newState == GameStateManager.GameState.GameClear || newState == GameStateManager.GameState.GameOver)
+        if (newState == GameStateManager.GameState.Playing)
+        {
+            Move(); // ゲーム中は動作を許可
+        }
+        else if (newState == GameStateManager.GameState.GameClear || newState == GameStateManager.GameState.GameOver)
         {
             Stop(); // ゲームクリアまたはゲームオーバー時に停止
         }
@@ -79,5 +83,10 @@ public class RabbitMovement : MonoBehaviour
     {
         isStopped = true; // 停止フラグを設定
         rb.velocity = Vector3.zero; // 速度をリセット
+    }
+
+    public void Move()
+    {
+        isStopped = false; // 停止フラグを解除
     }
 }
