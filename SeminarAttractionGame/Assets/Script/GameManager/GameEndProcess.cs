@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public static class ClearProcess
+public static class GameEndProcess
 {
     public static void Do()
     {

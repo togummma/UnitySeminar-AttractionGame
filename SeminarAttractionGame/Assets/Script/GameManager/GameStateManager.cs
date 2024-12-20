@@ -38,7 +38,7 @@ public class GameStateManager : MonoBehaviour
         {
             Debug.Log("ゲームクリア！");
             // ゲームクリア処理をここに記述
-            ClearProcess.Do();
+            GameEndProcess.Do();
         }
     }
 
@@ -46,6 +46,7 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.Log("ゲームオーバー！");
         // ゲームオーバー処理をここに記述
+        GameEndProcess.Do();
     }
 
 }
