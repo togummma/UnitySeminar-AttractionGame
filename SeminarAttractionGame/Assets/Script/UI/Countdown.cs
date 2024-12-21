@@ -32,6 +32,9 @@ public class CountdownUIManager : MonoBehaviour
         {
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
+
+        // 初期状態で非表示に設定
+        countdownLabel.style.display = DisplayStyle.None;
     }
 
     private void OnDestroy()
@@ -51,25 +54,23 @@ public class CountdownUIManager : MonoBehaviour
         }
     }
 
-   // CountdownUIManager.cs
-private IEnumerator CountdownRoutine()
-{
-    int countdown = 3; // カウントダウンの秒数
-    countdownLabel.style.display = DisplayStyle.Flex; // ラベルを表示
-    while (countdown > 0)
+    private IEnumerator CountdownRoutine()
     {
-        countdownLabel.text = countdown.ToString();
-        yield return new WaitForSecondsRealtime(1); // Time.timeScaleが0でも動作するようにWaitForSecondsRealtimeを使用
-        countdown--;
+        int countdown = 3; // カウントダウンの秒数
+        countdownLabel.style.display = DisplayStyle.Flex; // ラベルを表示
+        while (countdown > 0)
+        {
+            countdownLabel.text = countdown.ToString();
+            yield return new WaitForSecondsRealtime(1); // Time.timeScaleが0でも動作するようにWaitForSecondsRealtimeを使用
+            countdown--;
+        }
+
+        countdownLabel.text = "スタート！";
+        yield return new WaitForSecondsRealtime(1);
+        countdownLabel.style.display = DisplayStyle.None; // ラベルを非表示
+
+        // カウントダウン終了後にゲームを開始
+        Time.timeScale = 1f; // ゲーム再開
+        GameStateManager.Instance.Play();
     }
-
-    countdownLabel.text = "スタート！";
-    yield return new WaitForSecondsRealtime(1);
-    countdownLabel.style.display = DisplayStyle.None; // ラベルを非表示
-
-    // カウントダウン終了後にゲームを開始
-    Time.timeScale = 1f; // ゲーム再開
-    GameStateManager.Instance.Play();
-}
-
 }

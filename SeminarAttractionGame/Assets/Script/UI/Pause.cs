@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class Pause : MonoBehaviour
 {
     private UIDocument uiDocument;
+    private VisualElement pauseUI;
     private Button playButton;
 
     void Awake()
@@ -13,14 +14,15 @@ public class Pause : MonoBehaviour
         uiDocument = GetComponent<UIDocument>();
         var root = uiDocument.rootVisualElement;
 
-        // ボタン取得
+        // UIとボタン取得
+        pauseUI = root.Q<VisualElement>("pause-ui");
         playButton = root.Q<Button>("play-button");
 
         // ボタンイベント登録
         playButton.clicked += OnPlayButtonClicked;
 
-        // 最初はボタンのみ表示
-        root.style.display = DisplayStyle.Flex;
+        // 最初はUIを表示
+        pauseUI.style.display = DisplayStyle.Flex;
         Time.timeScale = 0f; // ゲーム停止
     }
 
@@ -28,6 +30,6 @@ public class Pause : MonoBehaviour
     {
         // ゲーム再開
         GameStateManager.Instance.StartCountdown();
-        gameObject.SetActive(false); // UI非表示
+        pauseUI.style.display = DisplayStyle.None; // UI非表示
     }
 }

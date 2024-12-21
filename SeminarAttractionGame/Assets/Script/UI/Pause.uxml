@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Script/UI/Utility.uss" />
-    <ui:VisualElement name="play-button-container" style="flex-grow: 1; justify-content: center; align-items: center;">
-        <ui:Button name="play-button" text="▶" style="width: 100px; height: 100px; font-size: 48px; border-radius: 50%;" />
-    </ui:VisualElement>
+    <ui:VisualElement name="pause-ui" style="flex-grow: 1; justify-content: center; align-items: center;">
+    <ui:Button name="play-button" text="▶" style="width: 100px; height: 100px; font-size: 48px; border-radius: 50%;" />
+</ui:VisualElement>
+
 </ui:UXML>
