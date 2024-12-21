@@ -1,70 +1,60 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
-public class HUDManager : MonoBehaviour
+public class HUD : MonoBehaviour
 {
     private Label timerLabel;
-    private float elapsedTime = 0f;
-    private bool isRunning = false;
+    private Button nextStageButton;
+    private GameDataManager gameDataManager;
 
     private void Start()
     {
-        // UIDocumentの取得
         var uiDocument = GetComponent<UIDocument>();
         var root = uiDocument.rootVisualElement;
 
-        // タイマーラベルの取得
+        // タイマー表示用ラベル
         timerLabel = root.Q<Label>("timer-label");
-        if (timerLabel == null)
+
+        // 次のステージボタン
+        nextStageButton = root.Q<Button>("next-stage-button");
+        if (nextStageButton != null)
         {
-            Debug.LogError("timer-labelがUXML内に見つかりません。");
-            return;
+            nextStageButton.clicked += OnNextStageButtonClicked;
         }
 
-        // GameStateManagerの状態変更イベントを購読
-        GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        // GameDataManagerの取得
+        gameDataManager = FindObjectOfType<GameDataManager>();
+        if (gameDataManager == null)
+        {
+            Debug.LogError("GameDataManagerが見つかりません。");
+        }
     }
 
     private void Update()
     {
-        // タイマーを更新
-        if (isRunning)
+        if (timerLabel != null && gameDataManager != null)
         {
-            elapsedTime += Time.deltaTime; // Time.timeScaleに依存
-            UpdateTimerDisplay();
+            float elapsedTime = gameDataManager.GetElapsedTime();
+            int minutes = Mathf.FloorToInt(elapsedTime / 60);
+            float seconds = elapsedTime % 60;
+            timerLabel.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
         }
     }
 
-    private void OnDestroy()
+    private void OnNextStageButtonClicked()
     {
-        // イベント購読解除
-        if (GameStateManager.Instance != null)
+        if (gameDataManager != null)
         {
-            GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+            string nextStage = gameDataManager.GetNextUnlockedStage();
+            if (!string.IsNullOrEmpty(nextStage))
+            {
+                SceneManager.LoadScene(nextStage);
+            }
+            else
+            {
+                Debug.LogError("次のステージが見つかりません。");
+            }
         }
-    }
-
-    private void HandleGameStateChanged(GameStateManager.GameState newState)
-    {
-        if (newState == GameStateManager.GameState.Playing) // 修正
-        {
-            isRunning = true;
-        }
-        else
-        {
-            isRunning = false;
-        }
-    }
-
-    private void UpdateTimerDisplay()
-    {
-        int minutes = Mathf.FloorToInt(elapsedTime / 60);
-        float seconds = elapsedTime % 60;
-        timerLabel.text = string.Format("{0:00}:{1:00.00}", minutes, seconds); // 小数第2位まで表示
-    }
-
-    public float GetElapsedTime()
-    {
-        return elapsedTime;
     }
 }

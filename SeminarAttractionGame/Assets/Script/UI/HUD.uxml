@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UXML.xsd" editor-extension-mode="False">
-    <ui:VisualElement style="width: 100%; height: 100%; position: absolute;">
-        <ui:Label name="timer-label" text="00:00.00" 
-                  style="position: absolute; top: 10px; left: 10px; font-size: 64px; 
-                         -unity-text-outline-color: rgba(0, 0, 0, 0); 
-                         color: rgb(255, 255, 255);" />
+    <ui:VisualElement name="VisualElement" style="width: 100px; height: 180px; position: absolute; -unity-text-outline-color: rgba(0, 0, 0, 0); color: rgb(0, 0, 0); font-size: 15px; background-color: rgba(0, 0, 0, 0); white-space: nowrap; align-self: flex-start; justify-content: flex-start; flex-direction: column; flex-basis: auto;">
+        <ui:Label name="scene-label" text="Scene Name" style="position: relative; top: 0; left: 10px; font-size: 48px; color: rgb(255, 255, 255);" />
+        <ui:Label name="timer-label" text="00:00.00" style="position: relative; top: 0; left: 3px; font-size: 64px; -unity-text-outline-color: rgba(0, 0, 0, 0); color: rgb(255, 255, 255);" />
     </ui:VisualElement>
 </ui:UXML>
