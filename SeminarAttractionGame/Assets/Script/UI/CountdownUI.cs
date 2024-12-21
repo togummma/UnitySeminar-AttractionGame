@@ -30,7 +30,6 @@ public class CountdownUIManager : MonoBehaviour
         // GameStateManagerのイベントを購読
         if (GameStateManager.Instance != null)
         {
-            Debug.Log("GameStateManagerのイベントを購読");
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
     }
@@ -54,7 +53,6 @@ public class CountdownUIManager : MonoBehaviour
 
     private IEnumerator CountdownRoutine()
     {
-        Debug.Log("UI: カウントダウン関数の呼び出し｡");
         int countdown = 3; // カウントダウンの秒数
         countdownLabel.style.display = DisplayStyle.Flex; // ラベルを表示
         while (countdown > 0)

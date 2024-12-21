@@ -6,6 +6,7 @@ public class TitleSceneUI : MonoBehaviour
 {
     private void OnEnable()
     {
+        Debug.Log("TitleSceneUI Enabled!");
         // UXMLとスタイルをロード
         var root = GetComponent<UIDocument>().rootVisualElement;
 
@@ -27,6 +28,7 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnExitButtonClicked()
     {
+        Debug.Log("Exit Button Clicked!");
         // ゲーム終了時の処理
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

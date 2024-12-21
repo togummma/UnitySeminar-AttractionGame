@@ -1,0 +1,28 @@
+/* ボタンコンテナのスタイル */
+.ColumnButtonContainer {
+    flex-grow: 1;
+    width: 50%;
+    margin: 120px;
+}
+
+/* ボタンの共通スタイル */
+.ColumnButtonContainer > Button {
+    width: auto;
+    height: 96px;
+    font-size: 48px;
+    border-radius: 48px;
+}
+
+/* ボタン間の余白 */
+.ColumnButtonContainer > Button.margin-top {
+    margin-top: 32px;
+}
+
+/* ラベルのスタイル */
+.clear-label {
+    width: auto;
+    font-size: 192px;
+    -unity-text-align: upper-center;
+    margin-top: 120px;
+    -unity-font-style: bold;
+}

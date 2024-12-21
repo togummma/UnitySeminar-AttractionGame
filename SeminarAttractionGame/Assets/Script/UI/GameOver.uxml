@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Script/UI/Utility.uss" />
+    <ui:VisualElement name="gameover-ui" style="flex-grow: 1; align-items: center; display: none;">
+        <ui:Label name="gameover-label"
+        tabindex="-1" text="Game Over" parse-escape-sequences="true" display-tooltip-when-elided="true" class="clear-label" />
+        <ui:VisualElement name="gameover-button-container"
+        class="ColumnButtonContainer" style="display: none;">
+            <ui:Button name="retry"
+            text="リトライ" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            <ui:Button name="title"
+            text="タイトルに戻る" class="margin-top" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
     private int collectedGoalItems; // 取得済みのアイテム数
 
     //状態の種類を定義
-    public enum GameState { Preparing, StartCountdown, Playing, GameClear, GameOver }
+    public enum GameState { Preparing, Ready, StartCountdown, Playing, GameClear, GameOver }
     private GameState currentState; // 現在の状態の変数
 
     // ゲーム状態が変わったときのイベントを宣言
@@ -57,6 +57,12 @@ public class GameStateManager : MonoBehaviour
         return currentState == state;
     }
 
+    public void Ready()
+    {
+        Debug.Log("ゲーム準備完了！");
+        SetState(GameState.Ready); // 状態を更新
+    }
+
     public void StartCountdown()
     {
         Debug.Log("カウントダウン開始！");
@@ -82,8 +88,8 @@ public class GameStateManager : MonoBehaviour
     {
         if (collectedGoalItems >= totalGoalItems)
         {
-            SetState(GameState.GameClear); // 状態を更新
             Debug.Log("ゲームクリア！");
+            SetState(GameState.GameClear); // 状態を更新
             // ゲームクリア処理をここに記述
         }
     }
@@ -92,8 +98,8 @@ public class GameStateManager : MonoBehaviour
     {
         if (currentState != GameState.Playing) return;
 
-        SetState(GameState.GameOver); // 状態を更新
         Debug.Log("ゲームオーバー！");
+        SetState(GameState.GameOver); // 状態を更新
         // ゲームオーバー処理をここに記述
     }
 
