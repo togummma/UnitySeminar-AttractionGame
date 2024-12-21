@@ -29,7 +29,6 @@ public class GameStateManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 必要に応じて
         }
         else
         {
