@@ -51,22 +51,25 @@ public class CountdownUIManager : MonoBehaviour
         }
     }
 
-    private IEnumerator CountdownRoutine()
+   // CountdownUIManager.cs
+private IEnumerator CountdownRoutine()
+{
+    int countdown = 3; // カウントダウンの秒数
+    countdownLabel.style.display = DisplayStyle.Flex; // ラベルを表示
+    while (countdown > 0)
     {
-        int countdown = 3; // カウントダウンの秒数
-        countdownLabel.style.display = DisplayStyle.Flex; // ラベルを表示
-        while (countdown > 0)
-        {
-            countdownLabel.text = countdown.ToString();
-            yield return new WaitForSeconds(1);
-            countdown--;
-        }
-
-        countdownLabel.text = "スタート！";
-        yield return new WaitForSeconds(1);
-        countdownLabel.style.display = DisplayStyle.None; // ラベルを非表示
-
-        // カウントダウン終了後にゲームを開始
-        GameStateManager.Instance.Play();
+        countdownLabel.text = countdown.ToString();
+        yield return new WaitForSecondsRealtime(1); // Time.timeScaleが0でも動作するようにWaitForSecondsRealtimeを使用
+        countdown--;
     }
+
+    countdownLabel.text = "スタート！";
+    yield return new WaitForSecondsRealtime(1);
+    countdownLabel.style.display = DisplayStyle.None; // ラベルを非表示
+
+    // カウントダウン終了後にゲームを開始
+    Time.timeScale = 1f; // ゲーム再開
+    GameStateManager.Instance.Play();
+}
+
 }

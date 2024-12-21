@@ -27,7 +27,6 @@ public class Pause : MonoBehaviour
     private void OnPlayButtonClicked()
     {
         // ゲーム再開
-        Time.timeScale = 1f;
         GameStateManager.Instance.StartCountdown();
         gameObject.SetActive(false); // UI非表示
     }
