@@ -1,0 +1,47 @@
+/* コンテナ全体 */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* タイトルのスタイル */
+.title {
+    -unity-text-align: middle-center;
+    font-size: 100px;
+    -unity-font-style: bold;
+    margin-bottom: 20px;
+}
+
+/* サブタイトルのスタイル */
+.subtitle {
+    font-size: 48px;
+    height: 75px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    -unity-font-style: normal;
+    margin-bottom: 40px;
+}
+
+/* ボタンコンテナ */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+}
+
+/* ボタン共通スタイル */
+.button-container > Button {
+    height: 124px;
+    font-size: 48px;
+    border-radius: 48px;
+    margin-bottom: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-color: transparent;
+    width: 100%;
+}

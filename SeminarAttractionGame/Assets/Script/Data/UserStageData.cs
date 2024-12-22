@@ -30,4 +30,17 @@ public class GameData
             stages[i] = new StageData(sceneNames[i]); // Scene名を設定
         }
     }
+
+    // 指定したステージ名のデータを取得
+    public StageData GetStageInfo(string stageName)
+    {
+        foreach (var stage in stages)
+        {
+            if (stage.sceneName == stageName)
+            {
+                return stage; // 一致するステージデータを返す
+            }
+        }
+        return null; // 該当ステージが見つからない場合
+    }
 }

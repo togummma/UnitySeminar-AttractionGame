@@ -1,0 +1,42 @@
+.stage-button {
+    width: 600px; /* ボタン幅 */
+    height: 100px; /* ボタン高さ */
+    font-size: 48px; /* フォントサイズ */
+    margin: 10px; /* ボタン間の余白 */
+    border-radius: 10px; /* 角丸 */
+    background-color: #444; /* 通常時の背景色 */
+    color: white; /* 通常時の文字色 */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #888; /* ボーダー */
+}
+
+.stage-button:hover {
+    background-color: #666; /* ホバー時の色 */
+    border: 2px solid #fff; /* ホバー時のボーダー */
+}
+
+.locked-button {
+    background-color: #999; /* ロック時の背景色 */
+    color: #ccc; /* ロック時の文字色 */
+}
+
+.unlocked-button {
+    background-color: #4CAF50; /* アンロック時の色 */
+    color: white;
+}
+
+.best-time {
+    font-size: 16px;
+    color: #FFD700; /* ベストタイムは金色 */
+    text-align: center;
+}
+
+.scroll-container {
+    flex-grow: 1; /* サイズを自動調整 */
+    overflow: scroll;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
