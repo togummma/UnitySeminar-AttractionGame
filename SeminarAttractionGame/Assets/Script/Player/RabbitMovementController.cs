@@ -9,7 +9,7 @@ public class RabbitMovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
-    private bool isStopped = false; // 移動停止フラグ
+    private bool isStopped = true; // 移動停止フラグ
 
     void Start()
     {

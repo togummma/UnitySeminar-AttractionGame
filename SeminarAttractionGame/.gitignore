@@ -27,3 +27,6 @@ Thumbs.db
 # Other files
 *.apk
 *.unitypackage
+
+# Include meta files to prevent prefab link issues
+!*.meta

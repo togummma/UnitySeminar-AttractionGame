@@ -70,7 +70,6 @@ public class CountdownUIManager : MonoBehaviour
         countdownLabel.style.display = DisplayStyle.None; // ラベルを非表示
 
         // カウントダウン終了後にゲームを開始
-        Time.timeScale = 1f; // ゲーム再開
         GameStateManager.Instance.Play();
     }
 }

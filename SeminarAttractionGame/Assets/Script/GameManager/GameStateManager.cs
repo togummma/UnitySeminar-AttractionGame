@@ -49,6 +49,16 @@ public class GameStateManager : MonoBehaviour
         if (currentState == newState) return;
         currentState = newState;
         OnGameStateChanged?.Invoke(newState); // 状態変更イベントを発火
+
+        // 状態による時間制御
+        if (newState == GameState.Preparing || newState == GameState.Ready || newState == GameState.StartCountdown)
+        {
+            Time.timeScale = 0f; // ゲーム内時間停止
+        }
+        else
+        {
+            Time.timeScale = 1f; // ゲーム内時間再開
+        }
     }
 
     public bool IsState(GameState state)
