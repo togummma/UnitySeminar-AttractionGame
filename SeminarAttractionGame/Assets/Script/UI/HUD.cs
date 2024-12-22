@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class HUD : MonoBehaviour
 {
     private Label timerLabel;
+    private Label sceneLabel;
     private Button nextStageButton;
     private GameDataManager gameDataManager;
 
@@ -15,6 +16,13 @@ public class HUD : MonoBehaviour
 
         // タイマー表示用ラベル
         timerLabel = root.Q<Label>("timer-label");
+
+        // シーン名表示用ラベル
+        sceneLabel = root.Q<Label>("scene-label");
+        if (sceneLabel != null)
+        {
+            sceneLabel.text = SceneManager.GetActiveScene().name;
+        }
 
         // 次のステージボタン
         nextStageButton = root.Q<Button>("next-stage-button");

@@ -39,7 +39,7 @@ public class StageSelectUI : MonoBehaviour
         Debug.Log("DisplayStageList - スタート");
 
         // ステージ順序のロード
-        string[] stageOrder = GameStorageManager.LoadStageOrder();
+        string[] stageOrder = UserStageDataHandler.LoadStageOrder();
         if (stageOrder == null || stageOrder.Length == 0)
         {
             Debug.LogError("ステージ順序のロードに失敗しました！");
@@ -47,12 +47,12 @@ public class StageSelectUI : MonoBehaviour
         }
 
         // データのロード
-        GameData data = GameStorageManager.LoadData();
+        GameData data = UserStageDataHandler.LoadData();
         if (data == null)
         {
             Debug.LogError("保存データがロードできません！ 初期化します。");
-            GameStorageManager.InitializeData();
-            data = GameStorageManager.LoadData();
+            UserStageDataHandler.InitializeData();
+            data = UserStageDataHandler.LoadData();
             if (data == null)
             {
                 Debug.LogError("データ初期化に失敗しました！");

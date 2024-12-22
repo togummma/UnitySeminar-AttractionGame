@@ -14,7 +14,7 @@ public class GameDataManager : MonoBehaviour
         GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
 
         // 現在のステージインデックスを取得
-        string[] stageOrder = GameStorageManager.LoadStageOrder();
+        string[] stageOrder =UserStageDataHandler.LoadStageOrder();
         if (stageOrder == null || stageOrder.Length == 0)
         {
             Debug.LogError("ステージ順序のロードに失敗しました！");
@@ -56,11 +56,11 @@ public class GameDataManager : MonoBehaviour
 
     private void SaveGameData()
     {
-        GameData data = GameStorageManager.LoadData();
+        GameData data =UserStageDataHandler.LoadData();
         if (data == null)
         {
-            GameStorageManager.InitializeData();
-            data = GameStorageManager.LoadData();
+        UserStageDataHandler.InitializeData();
+            data =UserStageDataHandler.LoadData();
             if (data == null)
             {
                 Debug.LogError("データ初期化に失敗しました！");
@@ -81,7 +81,7 @@ public class GameDataManager : MonoBehaviour
             stageInfo.bestTime = elapsedTime;
         }
 
-        string[] stageOrder = GameStorageManager.LoadStageOrder();
+        string[] stageOrder =UserStageDataHandler.LoadStageOrder();
         if (currentStageIndex + 1 < stageOrder.Length)
         {
             var nextStageInfo = data.GetStageInfo(stageOrder[currentStageIndex + 1]);
@@ -91,7 +91,7 @@ public class GameDataManager : MonoBehaviour
             }
         }
 
-        GameStorageManager.SaveData(data);
+    UserStageDataHandler.SaveData(data);
         Debug.Log($"ステージ {stageInfo.sceneName} のデータを保存しました。タイム: {elapsedTime}");
     }
 
@@ -102,10 +102,10 @@ public class GameDataManager : MonoBehaviour
 
     public string GetNextUnlockedStage()
     {
-        string[] stageOrder = GameStorageManager.LoadStageOrder();
+        string[] stageOrder =UserStageDataHandler.LoadStageOrder();
         if (currentStageIndex + 1 < stageOrder.Length)
         {
-            var nextStageInfo = GameStorageManager.LoadData()?.GetStageInfo(stageOrder[currentStageIndex + 1]);
+            var nextStageInfo =UserStageDataHandler.LoadData()?.GetStageInfo(stageOrder[currentStageIndex + 1]);
             if (nextStageInfo != null && nextStageInfo.isUnlocked)
             {
                 return nextStageInfo.sceneName;

@@ -1,5 +1,5 @@
 .stage-button {
-    width: 600px; /* ボタン幅 */
+    width: 50%; /* ボタン幅 */
     height: 100px; /* ボタン高さ */
     font-size: 48px; /* フォントサイズ */
     margin: 10px; /* ボタン間の余白 */

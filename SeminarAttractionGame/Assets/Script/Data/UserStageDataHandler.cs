@@ -2,7 +2,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameStorageManager
+public class UserStageDataHandler
 {
     // 保存先を切り替えるためのフラグ
     private static bool saveToProjectFolder = true;
@@ -10,7 +10,7 @@ public class GameStorageManager
     private static string savePath;
 
     // コンストラクタで保存パスを初期化
-    static GameStorageManager()
+    static UserStageDataHandler()
     {
         savePath = GetSavePath();
         Debug.Log($"保存パス: {savePath}");
