@@ -2,23 +2,22 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameStorageManager : MonoBehaviour
+public class GameStorageManager
 {
-    // インスペクターで切り替え可能
-    [SerializeField] private bool saveToProjectFolder = false;
+    // 保存先を切り替えるためのフラグ
+    private static bool saveToProjectFolder = true;
 
-    private string savePath;
+    private static string savePath;
 
-    // 初期化
-    private void Awake()
+    // コンストラクタで保存パスを初期化
+    static GameStorageManager()
     {
-        // 保存先を設定
         savePath = GetSavePath();
         Debug.Log($"保存パス: {savePath}");
     }
 
     // 保存先のパスを取得
-    private string GetSavePath()
+    private static string GetSavePath()
     {
         string folderPath;
 
@@ -39,11 +38,19 @@ public class GameStorageManager : MonoBehaviour
             Directory.CreateDirectory(folderPath);
         }
 
-        return folderPath + "gamedata.json";
+        return Path.Combine(folderPath, "gamedata.json");
+    }
+
+    // 保存先の切り替え
+    public static void SetSaveLocation(bool saveInProject)
+    {
+        saveToProjectFolder = saveInProject;
+        savePath = GetSavePath(); // 保存先を再設定
+        Debug.Log($"保存パスが変更されました: {savePath}");
     }
 
     // データを保存
-    public void SaveData(GameData data)
+    public static void SaveData(GameData data)
     {
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
@@ -51,7 +58,7 @@ public class GameStorageManager : MonoBehaviour
     }
 
     // データを読み込み
-    public GameData LoadData()
+    public static GameData LoadData()
     {
         if (File.Exists(savePath))
         {
@@ -65,7 +72,7 @@ public class GameStorageManager : MonoBehaviour
     }
 
     // ステージ順序を取得
-    public string[] LoadStageOrder()
+    public static string[] LoadStageOrder()
     {
         string[] stageOrder = StageOrder.Stages;
         Debug.Log($"ステージ順序ロード: {string.Join(", ", stageOrder)}");
@@ -73,7 +80,7 @@ public class GameStorageManager : MonoBehaviour
     }
 
     // 次のアンロック済みステージを取得
-    public string GetNextUnlockedStage()
+    public static string GetNextUnlockedStage()
     {
         GameData data = LoadData();
         if (data == null) return null;
@@ -94,7 +101,7 @@ public class GameStorageManager : MonoBehaviour
     }
 
     // データの初期化
-    public void InitializeData()
+    public static void InitializeData()
     {
         Debug.Log("保存データの初期化開始");
 

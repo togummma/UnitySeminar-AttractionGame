@@ -6,7 +6,6 @@ public class StageSelectUI : MonoBehaviour
 {
     private UIDocument uiDocument;
     private VisualElement stageListContainer;
-    private GameStorageManager storageManager;
 
     private void Awake()
     {
@@ -31,10 +30,6 @@ public class StageSelectUI : MonoBehaviour
 
         Debug.Log("stage-list-container が正常に取得されました。");
 
-        // データ管理クラスのインスタンス作成
-        storageManager = new GameStorageManager();
-        Debug.Log("GameStorageManager インスタンス作成完了");
-
         // ステージリスト表示
         DisplayStageList();
     }
@@ -43,15 +38,21 @@ public class StageSelectUI : MonoBehaviour
     {
         Debug.Log("DisplayStageList - スタート");
 
-        // ステージ順序と保存データの読み込み
-        string[] stageOrder = storageManager.LoadStageOrder();
-        GameData data = storageManager.LoadData();
+        // ステージ順序のロード
+        string[] stageOrder = GameStorageManager.LoadStageOrder();
+        if (stageOrder == null || stageOrder.Length == 0)
+        {
+            Debug.LogError("ステージ順序のロードに失敗しました！");
+            return;
+        }
 
+        // データのロード
+        GameData data = GameStorageManager.LoadData();
         if (data == null)
         {
             Debug.LogError("保存データがロードできません！ 初期化します。");
-            storageManager.InitializeData();
-            data = storageManager.LoadData();
+            GameStorageManager.InitializeData();
+            data = GameStorageManager.LoadData();
             if (data == null)
             {
                 Debug.LogError("データ初期化に失敗しました！");
@@ -64,7 +65,6 @@ public class StageSelectUI : MonoBehaviour
         {
             Debug.Log($"ステージ処理: {stageName}");
 
-            // ステージデータ取得
             var stageInfo = data.GetStageInfo(stageName);
             if (stageInfo == null)
             {
@@ -72,7 +72,6 @@ public class StageSelectUI : MonoBehaviour
                 continue;
             }
 
-            // ボタン作成
             Button stageButton = new Button { text = stageName };
             stageButton.AddToClassList("stage-button");
 
@@ -105,7 +104,6 @@ public class StageSelectUI : MonoBehaviour
                 };
             }
 
-            // ボタンをリストに追加
             stageListContainer.Add(stageButton);
             Debug.Log($"ボタン追加: {stageButton.text}");
         }
@@ -113,7 +111,6 @@ public class StageSelectUI : MonoBehaviour
         Debug.Log("DisplayStageList - 終了");
     }
 
-    // タイムフォーマット処理
     private string FormatTime(float time)
     {
         int minutes = Mathf.FloorToInt(time / 60);
