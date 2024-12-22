@@ -3,12 +3,10 @@
     "maps": [
         {
             "name": "UI",
-            "id": "d5153bfb-98f4-4734-837a-b09dea974a45",
             "actions": [
                 {
                     "name": "Navigate",
                     "type": "Value",
-                    "id": "b105a8eb-2c9c-4eb7-9841-8279009bae4e",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -18,7 +16,6 @@
             "bindings": [
                 {
                     "name": "2D Vector",
-                    "id": "a554df25-556b-42c2-a89f-04dc72ec2d57",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -29,8 +26,7 @@
                 },
                 {
                     "name": "Up",
-                    "id": "e1c3a4f3-12b7-4d74-b3fc-2c34edb6e793",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -40,8 +36,7 @@
                 },
                 {
                     "name": "Down",
-                    "id": "b1d3d4f3-34c3-4d73-b7fc-3c32edb7e795",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -51,8 +46,7 @@
                 },
                 {
                     "name": "Left",
-                    "id": "a2d3c4f3-78c7-4d73-b7ac-1c31edb5e790",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -62,14 +56,33 @@
                 },
                 {
                     "name": "Right",
-                    "id": "c2d3d4f3-89b7-4e73-b8ac-2c32edb7e791",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "Gamepad Left Stick",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Gamepad D-Pad",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

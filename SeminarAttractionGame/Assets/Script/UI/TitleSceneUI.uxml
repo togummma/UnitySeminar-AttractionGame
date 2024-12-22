@@ -4,10 +4,10 @@
         <ui:Label text="ウサギと猟犬 Action" class="title" />
         <ui:Label text="ウサギになって猟犬から逃げながら､ニンジンを手に入れよう!!" class="subtitle" />
         <ui:VisualElement class="button-container">
-            <ui:Button name="start-button" text="ゲームスタート" />
-            <ui:Button name="continue-button" text="つづきから" />
-            <ui:Button name="stage-select-button" text="ステージ選択" />
-            <ui:Button name="exit-button" text="ゲーム終了" />
+            <ui:Button name="start-button" text="ゲームスタート" tabindex="4" />
+            <ui:Button name="continue-button" text="つづきから" tabindex="1" />
+            <ui:Button name="stage-select-button" text="ステージ選択" tabindex="2" />
+            <ui:Button name="exit-button" text="ゲーム終了" tabindex="0" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
