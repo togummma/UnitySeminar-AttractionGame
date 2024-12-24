@@ -6,15 +6,20 @@
     border-radius: 10px; /* 角丸 */
     background-color: #444; /* 通常時の背景色 */
     color: white; /* 通常時の文字色 */
-    text-align: center;
+    -unity-text-align: middle-center; /* テキスト位置調整 */
+    -unity-font-style: normal; /* フォントスタイル指定 */
     justify-content: center;
     align-items: center;
-    border: 2px solid #888; /* ボーダー */
+    border-width: 2px;
+    border-style: solid;
+    border-color: #888; /* ボーダー */
 }
 
 .stage-button:hover {
     background-color: #666; /* ホバー時の色 */
-    border: 2px solid #fff; /* ホバー時のボーダー */
+    border-width: 2px;
+    border-style: solid;
+    border-color: #fff; /* ホバー時のボーダー */
 }
 
 .locked-button {
@@ -30,7 +35,7 @@
 .best-time {
     font-size: 16px;
     color: #FFD700; /* ベストタイムは金色 */
-    text-align: center;
+    -unity-text-align: middle-center; /* テキスト位置調整 */
 }
 
 .scroll-container {
