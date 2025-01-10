@@ -1,34 +1,22 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
 public class StageSelectUI : MonoBehaviour
 {
-    private UIDocument uiDocument;
-    private VisualElement stageListContainer;
+    [SerializeField] private Transform stageListContainer; // ステージボタンの親オブジェクト
+    [SerializeField] private Button stageButtonPrefab;     // ステージボタンのプレハブ（TextMeshProを含む）
 
     private void Awake()
     {
         Debug.Log("StageSelectUI Awake - 開始");
 
-        // UI要素取得
-        uiDocument = GetComponent<UIDocument>();
-        var root = uiDocument?.rootVisualElement;
-
-        if (root == null)
+        if (stageListContainer == null || stageButtonPrefab == null)
         {
-            Debug.LogError("UIのルート要素が取得できません！");
+            Debug.LogError("ステージリストのコンテナまたはボタンプレハブが設定されていません！");
             return;
         }
-
-        stageListContainer = root.Q<VisualElement>("stage-list-container");
-        if (stageListContainer == null)
-        {
-            Debug.LogError("stage-list-containerが見つかりません！");
-            return;
-        }
-
-        Debug.Log("stage-list-container が正常に取得されました。");
 
         // ステージリスト表示
         DisplayStageList();
@@ -72,40 +60,47 @@ public class StageSelectUI : MonoBehaviour
                 continue;
             }
 
-            Button stageButton = new Button { text = stageName };
-            stageButton.AddToClassList("stage-button");
+            // ボタン生成
+            Button stageButton = Instantiate(stageButtonPrefab, stageListContainer);
+            TextMeshProUGUI buttonText = stageButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (buttonText != null)
+            {
+                buttonText.text = stageName;
+            }
 
             if (!stageInfo.isUnlocked) // ロック状態
             {
-                stageButton.AddToClassList("locked-button");
-                stageButton.text += " (ロック)";
-                stageButton.SetEnabled(false);
+                stageButton.interactable = false; // ボタンを無効化
+                if (buttonText != null)
+                {
+                    buttonText.text += " (ロック)";
+                }
                 Debug.Log($"ステージロック: {stageName}");
             }
             else // アンロック状態
             {
-                stageButton.AddToClassList("unlocked-button");
-
-                // ベストタイム表示
-                if (stageInfo.bestTime > 0)
+                if (buttonText != null)
                 {
-                    stageButton.text += $" (ベストタイム: {FormatTime(stageInfo.bestTime)})";
-                }
-                else
-                {
-                    stageButton.text += " (未クリア)";
+                    // ベストタイム表示
+                    if (stageInfo.bestTime > 0)
+                    {
+                        buttonText.text += $" (ベストタイム: {FormatTime(stageInfo.bestTime)})";
+                    }
+                    else
+                    {
+                        buttonText.text += " (未クリア)";
+                    }
                 }
 
                 // ステージ遷移イベント追加
-                stageButton.clicked += () =>
+                stageButton.onClick.AddListener(() =>
                 {
                     Debug.Log($"ステージ遷移: {stageName}");
                     SceneManager.LoadScene(stageName);
-                };
+                });
             }
 
-            stageListContainer.Add(stageButton);
-            Debug.Log($"ボタン追加: {stageButton.text}");
+            Debug.Log($"ボタン追加: {stageName}");
         }
 
         Debug.Log("DisplayStageList - 終了");

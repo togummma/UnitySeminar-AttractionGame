@@ -1,48 +1,29 @@
-/*
-タイトル画面
-- セーブデータがないときは､"スタートボタン"を表示
-- セーブデータがあるときは､"つづきから"ボタンを表示
-- ステージ選択に移動するボタン
-- ゲームを終了するボタン
-*/
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class TitleSceneUI : MonoBehaviour
 {
-    private void OnEnable()
+    [SerializeField] private Button mainButton;          // スタート/続きから兼用ボタン
+    [SerializeField] private Button stageSelectButton;   // ステージ選択ボタン
+    [SerializeField] private Button exitButton;          // 終了ボタン
+
+    private bool hasSaveData;                            // セーブデータがあるかどうか
+
+    private void Start()
     {
-        Debug.Log("TitleSceneUI Enabled!");
+        Debug.Log("TitleSceneUI Loaded!");
 
-        // UXMLとスタイルをロード
-        var root = GetComponent<UIDocument>().rootVisualElement;
+        // セーブデータの有無を確認
+        hasSaveData = CheckSaveData();
 
-        // ボタン要素の取得
-        var startButton = root.Q<Button>("start-button");
-        var continueButton = root.Q<Button>("continue-button");
-        var stageSelectButton = root.Q<Button>("stage-select-button"); // ステージ選択ボタン追加
-        var exitButton = root.Q<Button>("exit-button");
+        // ボタンの初期設定
+        mainButton.onClick.AddListener(OnMainButtonClicked);
+        stageSelectButton.onClick.AddListener(OnStageSelectButtonClicked);
+        exitButton.onClick.AddListener(OnExitButtonClicked);
 
-        // ボタンの初期表示状態を設定
-        bool hasSaveData = CheckSaveData(); // セーブデータの有無を確認
-
-        if (hasSaveData)
-        {
-            startButton.style.display = DisplayStyle.None; // スタートボタン非表示
-            continueButton.style.display = DisplayStyle.Flex; // 続きからボタン表示
-        }
-        else
-        {
-            startButton.style.display = DisplayStyle.Flex; // スタートボタン表示
-            continueButton.style.display = DisplayStyle.None; // 続きからボタン非表示
-        }
-
-        // ボタンにクリックイベントを設定
-        startButton.clicked += OnStartButtonClicked;
-        continueButton.clicked += OnContinueButtonClicked;
-        stageSelectButton.clicked += OnStageSelectButtonClicked; // ステージ選択ボタンのイベント追加
-        exitButton.clicked += OnExitButtonClicked;
+        // メインボタンのテキストは変更せず、機能を動的に変更
+        Debug.Log(hasSaveData ? "MainButton: Continue Mode" : "MainButton: Start Mode");
     }
 
     // セーブデータの有無を確認
@@ -52,19 +33,20 @@ public class TitleSceneUI : MonoBehaviour
         return System.IO.File.Exists(savePath); // セーブデータが存在するか確認
     }
 
-    // 新しくゲームを開始
-    private void OnStartButtonClicked()
+    // メインボタン（スタート/続きから）クリック処理
+    private void OnMainButtonClicked()
     {
-        Debug.Log("Start Button Clicked!");
-        SceneManager.LoadScene("Test1"); // 初期シーンに遷移
-    }
-
-    // セーブデータから続き開始
-    private void OnContinueButtonClicked()
-    {
-        Debug.Log("Continue Button Clicked!");
-        string lastScene = LoadLastScene(); // 最後にプレイしたシーンをロード
-        SceneManager.LoadScene(lastScene);
+        if (hasSaveData)
+        {
+            Debug.Log("Continue Button Clicked!");
+            string lastScene = LoadLastScene(); // 最後にプレイしたシーンをロード
+            SceneManager.LoadScene(lastScene);
+        }
+        else
+        {
+            Debug.Log("Start Button Clicked!");
+            SceneManager.LoadScene("Test1"); // 初期シーンに遷移
+        }
     }
 
     // ステージ選択画面へ移動
