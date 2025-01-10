@@ -1,35 +1,33 @@
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Pause : MonoBehaviour
 {
-    private UIDocument uiDocument;
-    private VisualElement pauseUI;
-    private Button playButton;
+    [SerializeField] private GameObject pausePanel;  // Pause UIパネル
+    [SerializeField] private Button playButton;      // 再開ボタン
 
-    void Awake()
+    private void Awake()
     {
-        // UIDocumentからUI要素を取得
-        uiDocument = GetComponent<UIDocument>();
-        var root = uiDocument.rootVisualElement;
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(true); // 初期状態で表示
+            Time.timeScale = 0f;       // ゲーム停止
+        }
 
-        // UIとボタン取得
-        pauseUI = root.Q<VisualElement>("pause-ui");
-        playButton = root.Q<Button>("play-button");
-
-        // ボタンイベント登録
-        playButton.clicked += OnPlayButtonClicked;
-
-        // 最初はUIを表示
-        pauseUI.style.display = DisplayStyle.Flex;
-        Time.timeScale = 0f; // ゲーム停止
+        if (playButton != null)
+        {
+            playButton.onClick.AddListener(OnPlayButtonClicked);
+        }
     }
 
     private void OnPlayButtonClicked()
     {
-        // ゲーム再開
-        GameStateManager.Instance.StartCountdown();
-        pauseUI.style.display = DisplayStyle.None; // UI非表示
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false); // UI非表示
+        }
+
+        // ゲーム再開（カウントダウンを開始）
+        GameStateManager.Instance?.StartCountdown();
     }
 }

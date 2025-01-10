@@ -1,34 +1,20 @@
 using UnityEngine;
-using UnityEngine.UIElements;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 public class HUD : MonoBehaviour
 {
-    private Label timerLabel;
-    private Label sceneLabel;
-    private Button nextStageButton;
+    [SerializeField] private TMP_Text timerLabel;     // タイマー表示用テキスト
+    [SerializeField] private TMP_Text sceneLabel;    // シーン名表示用テキスト
+
     private GameDataManager gameDataManager;
 
     private void Start()
     {
-        var uiDocument = GetComponent<UIDocument>();
-        var root = uiDocument.rootVisualElement;
-
-        // タイマー表示用ラベル
-        timerLabel = root.Q<Label>("timer-label");
-
-        // シーン名表示用ラベル
-        sceneLabel = root.Q<Label>("scene-label");
+        // シーン名を表示
         if (sceneLabel != null)
         {
             sceneLabel.text = SceneManager.GetActiveScene().name;
-        }
-
-        // 次のステージボタン
-        nextStageButton = root.Q<Button>("next-stage-button");
-        if (nextStageButton != null)
-        {
-            nextStageButton.clicked += OnNextStageButtonClicked;
         }
 
         // GameDataManagerの取得
@@ -47,22 +33,6 @@ public class HUD : MonoBehaviour
             int minutes = Mathf.FloorToInt(elapsedTime / 60);
             float seconds = elapsedTime % 60;
             timerLabel.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
-        }
-    }
-
-    private void OnNextStageButtonClicked()
-    {
-        if (gameDataManager != null)
-        {
-            string nextStage = gameDataManager.GetNextUnlockedStage();
-            if (!string.IsNullOrEmpty(nextStage))
-            {
-                SceneManager.LoadScene(nextStage);
-            }
-            else
-            {
-                Debug.LogError("次のステージが見つかりません。");
-            }
         }
     }
 }

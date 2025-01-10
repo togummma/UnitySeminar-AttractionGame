@@ -1,17 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Script/UI/Utility.uss?fileID=7433441132597879392&amp;guid=c5d76643dcee7c74498837f55387a4db&amp;type=3#Utility" />
-    <ui:VisualElement name="clear-ui"
-    style="flex-grow: 1; align-items: center; display: none;">
-        <ui:Label name="clear-label"
-        tabindex="-1" text="Clear!" parse-escape-sequences="true" display-tooltip-when-elided="true" class="clear-label" />
-        <ui:VisualElement name="CulearButtonContainer"
-        class="ColumnButtonContainer" style="display: none;">
-            <ui:Button name="next-stage"
-            text="次のステージ" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-            <ui:Button name="retry"
-            text="リトライ" class="margin-top" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-            <ui:Button name="stage-select"
-            text="ステージ選択" class="margin-top" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+    <ui:VisualElement name="clear-ui" style="flex-grow: 1; align-items: center; display: flex;">
+        <ui:Label name="clear-label" tabindex="-1" text="Clear!" parse-escape-sequences="true" display-tooltip-when-elided="true" class="clear-label" />
+        <ui:VisualElement name="CulearButtonContainer" class="ColumnButtonContainer" style="display: flex;">
+            <ui:Button name="next-stage" text="次のステージ" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            <ui:Button name="retry" text="リトライ" parse-escape-sequences="true" display-tooltip-when-elided="true" class="margin-top" />
+            <ui:Button name="stage-select" text="ステージ選択" parse-escape-sequences="true" display-tooltip-when-elided="true" class="margin-top" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

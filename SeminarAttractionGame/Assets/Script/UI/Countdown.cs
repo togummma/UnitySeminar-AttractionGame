@@ -1,45 +1,27 @@
 using UnityEngine;
-using UnityEngine.UIElements;
+using TMPro;
 using System.Collections;
 
-public class CountdownUIManager : MonoBehaviour
+public class CountdownUI : MonoBehaviour
 {
-    private UIDocument uiDocument; // UIBuild用のUIドキュメント
-    private Label countdownLabel; // カウントダウン表示用のラベル
+    [SerializeField] private GameObject countdownPanel; // カウントダウン表示用パネル
+    [SerializeField] private TMP_Text countdownLabel;       // カウントダウン表示用テキスト
 
     private void Start()
     {
-        // UIDocumentを取得
-        uiDocument = GetComponent<UIDocument>();
-        if (uiDocument == null)
+        if (countdownPanel != null)
         {
-            Debug.LogError("UIDocumentがアタッチされていません。");
-            return;
-        }
-        
-
-        // ルート要素からラベルを取得
-        var root = uiDocument.rootVisualElement;
-        countdownLabel = root.Q<Label>("countdown-label");
-        if (countdownLabel == null)
-        {
-            Debug.LogError("countdown-labelがUXML内に見つかりません。");
-            return;
+            countdownPanel.SetActive(false); // 初期状態で非表示
         }
 
-        // GameStateManagerのイベントを購読
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
-
-        // 初期状態で非表示に設定
-        countdownLabel.style.display = DisplayStyle.None;
     }
 
     private void OnDestroy()
     {
-        // イベント購読を解除
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
@@ -56,20 +38,34 @@ public class CountdownUIManager : MonoBehaviour
 
     private IEnumerator CountdownRoutine()
     {
+        if (countdownPanel != null)
+        {
+            countdownPanel.SetActive(true); // パネルを表示
+        }
+
         int countdown = 3; // カウントダウンの秒数
-        countdownLabel.style.display = DisplayStyle.Flex; // ラベルを表示
         while (countdown > 0)
         {
-            countdownLabel.text = countdown.ToString();
-            yield return new WaitForSecondsRealtime(1); // Time.timeScaleが0でも動作するようにWaitForSecondsRealtimeを使用
+            if (countdownLabel != null)
+            {
+                countdownLabel.text = countdown.ToString();
+            }
+            yield return new WaitForSecondsRealtime(1);
             countdown--;
         }
 
-        countdownLabel.text = "スタート！";
+        if (countdownLabel != null)
+        {
+            countdownLabel.text = "スタート！";
+        }
         yield return new WaitForSecondsRealtime(1);
-        countdownLabel.style.display = DisplayStyle.None; // ラベルを非表示
+
+        if (countdownPanel != null)
+        {
+            countdownPanel.SetActive(false); // パネルを非表示
+        }
 
         // カウントダウン終了後にゲームを開始
-        GameStateManager.Instance.Play();
+        GameStateManager.Instance?.Play();
     }
 }
