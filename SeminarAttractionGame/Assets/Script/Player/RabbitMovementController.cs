@@ -3,7 +3,7 @@ using UnityEngine;
 public class RabbitMovement : MonoBehaviour
 {
     [Header("移動設定")]
-    [SerializeField] private float jumpDistance = 3f;       // 移動時のジャンプ距離
+    [SerializeField] private float moveSpeed = 5f;       // 移動時のジャンプ距離
     [SerializeField] private float jumpHeight = 1f;         // ジャンプの高さ
     [SerializeField] private float rotationSpeed = 10f;     // 回転速度
     [SerializeField] private LayerMask groundLayer;         // 接地判定用レイヤー
@@ -78,27 +78,33 @@ public class RabbitMovement : MonoBehaviour
     }
 
     private void HandleGroundedMovement()
+{
+    // 入力ベクトルを取得
+    float horizontal = Input.GetAxis("Horizontal");
+    float vertical = Input.GetAxis("Vertical");
+
+    // カメラ基準で移動方向を計算
+    Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
+
+    if (isGrounded && moveDirection != Vector3.zero)
     {
-        // 入力ベクトルを取得
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        // 必要な垂直ジャンプ速度を計算（ジャンプ高さを指定）
+        float verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * jumpHeight);
 
-        // カメラ基準で移動方向を計算
-        Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
+        // 水平方向の速度を計算
+        Vector3 horizontalVelocity = moveDirection * moveSpeed;
 
-        if (moveDirection.magnitude > 0)
-        {
-            // ジャンプ方向を保存
-            lastJumpDirection = moveDirection;
+        // ジャンプ速度を設定
+        Vector3 jumpVelocity = horizontalVelocity;
+        jumpVelocity.y = verticalVelocity;
 
-            // ジャンプ方向を計算し力を加える
-            Vector3 jumpForce = moveDirection * jumpDistance;
-            jumpForce.y = Mathf.Sqrt(2 * jumpHeight * Physics.gravity.magnitude);
+        // 現在の速度をリセットして速度を適用
+        rb.velocity = jumpVelocity;
 
-            rb.AddForce(jumpForce, ForceMode.VelocityChange);
-            isGrounded = false; // 空中状態に設定
-        }
+        // 接地フラグをオフにする
+        isGrounded = false;
     }
+}
 
     private void HandleRotation()
     {
