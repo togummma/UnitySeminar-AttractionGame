@@ -27,6 +27,20 @@ public class Pause : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        // Ready状態でのみ操作を許可
+        if (GameStateManager.Instance != null && 
+            GameStateManager.Instance.IsState(GameStateManager.GameState.Ready))
+        {
+            // Spaceキーまたはマウスクリックで再開
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            {
+                OnPlayButtonClicked();
+            }
+        }
+    }
+
     private void OnPlayButtonClicked()
     {
         if (pausePanel != null)

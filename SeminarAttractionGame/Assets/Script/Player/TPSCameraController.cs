@@ -1,3 +1,5 @@
+//マウスカーソルの非表示状態を切り替える役割を暇なとき分離すること!!!
+
 using UnityEngine;
 
 public class TPSCameraController : MonoBehaviour
@@ -13,6 +15,10 @@ public class TPSCameraController : MonoBehaviour
     private float yaw = 0f;     // 水平方向の回転角
     private float pitch = 0f;   // 垂直方向の回転角
 
+    private GameStateManager gameStateManager; // 状態管理スクリプトの参照
+
+    private bool isCursorHidden = false; // マウスカーソルの非表示状態を追跡
+
     private void Start()
     {
         // 親オブジェクトをターゲットとして設定
@@ -25,15 +31,43 @@ public class TPSCameraController : MonoBehaviour
             return;
         }
 
+        // GameStateManagerを検索して参照
+        gameStateManager = GameStateManager.Instance;
+        if (gameStateManager == null)
+        {
+            Debug.LogError("GameStateManagerが見つかりません！");
+            enabled = false;
+            return;
+        }
+
         // 初期回転角度を設定
         yaw = transform.eulerAngles.y;
         pitch = transform.eulerAngles.x;
+
+        // マウスカーソルの初期設定
+        UpdateCursorVisibility();
     }
 
     private void LateUpdate()
     {
+        // ゲーム状態に応じてカメラ操作を制御
+        if (!IsCameraControlAllowed())
+        {
+            UpdateCursorVisibility(false);
+            return; // カメラ操作を許可しない状態
+        }
+
+        UpdateCursorVisibility(true);
         HandleMouseInput();
         UpdateCameraPosition();
+    }
+
+    private bool IsCameraControlAllowed()
+    {
+        // 許可された状態かどうかを判定
+        return gameStateManager.IsState(GameStateManager.GameState.Ready) ||
+               gameStateManager.IsState(GameStateManager.GameState.StartCountdown) ||
+               gameStateManager.IsState(GameStateManager.GameState.Playing);
     }
 
     private void HandleMouseInput()
@@ -62,5 +96,14 @@ public class TPSCameraController : MonoBehaviour
 
         // ターゲットを注視
         transform.LookAt(target.position + initialPositionOffset);
+    }
+
+    private void UpdateCursorVisibility(bool shouldHide = false)
+    {
+        if (isCursorHidden == shouldHide) return;
+
+        isCursorHidden = shouldHide;
+        Cursor.lockState = shouldHide ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !shouldHide;
     }
 }
