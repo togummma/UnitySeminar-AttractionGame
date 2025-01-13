@@ -2,32 +2,53 @@ using UnityEngine;
 
 public class RabbitMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;      // 移動速度
-    public float jumpForce = 5f;      // ジャンプ力
-    public float rotationSpeed = 10f; // 回転速度
-    public LayerMask groundLayer;     // 接地判定用レイヤー
+    [Header("移動設定")]
+    [SerializeField] private float smallJumpDistance = 3f;   // 小ジャンプの移動距離
+    [SerializeField] private float normalJumpDistance = 5f; // 中ジャンプの移動距離
+    [SerializeField] private float largeJumpDistance = 8f;  // 大ジャンプの移動距離
+    [SerializeField] private float jumpHeight = 1f;         // ジャンプの高さ
+    [SerializeField] private float rotationSpeed = 10f;     // 回転速度
+    [SerializeField] private LayerMask groundLayer;         // 接地判定用レイヤー
+
+    [Header("入力設定")]
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;  // ジャンプキー
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift; // ダッシュキー
 
     private Rigidbody rb;
-    private bool isGrounded;
-    private bool isStopped = true; // 移動停止フラグ
+    private Transform cameraTransform;  // 子オブジェクトのカメラ
+    private bool isGrounded = true;     // 接地状態
+    private bool isStopped = true;      // 停止状態フラグ
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbodyが見つかりません！");
+            enabled = false;
+            return;
+        }
+
+        // 子オブジェクトとしてのカメラを取得
+        cameraTransform = GetComponentInChildren<Camera>()?.transform;
+        if (cameraTransform == null)
+        {
+            Debug.LogError("カメラが見つかりません！");
+            enabled = false;
+            return;
+        }
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
-        // GameStateManagerのイベントを購読
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
-        // GameStateManagerのイベント購読を解除
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
@@ -38,55 +59,98 @@ public class RabbitMovement : MonoBehaviour
     {
         if (newState == GameStateManager.GameState.Playing)
         {
-            Move(); // ゲーム中は動作を許可
+            Move();
         }
-        else if (newState == GameStateManager.GameState.GameClear || newState == GameStateManager.GameState.GameOver)
+        else
         {
-            Stop(); // ゲームクリアまたはゲームオーバー時に停止
+            Stop();
         }
     }
 
-    void Update()
+    private void Update()
     {
-        if (isStopped) return; // 停止中なら処理を中断
+        if (isStopped) return;
 
-        // 接地判定 (足元に球を置いてチェック)
+        // 接地判定
         isGrounded = Physics.CheckSphere(transform.position, 0.2f, groundLayer);
 
-        // 入力取得 (前後左右)
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+        HandleJumpInput();
+        HandleRotation();
+    }
 
-        // 移動ベクトル計算
-        Vector3 move = new Vector3(moveX, 0, moveZ).normalized;
-
-        // 移動処理
-        if (move != Vector3.zero)
+    private void HandleJumpInput()
+    {
+        if (isGrounded)
         {
-            // Rigidbodyを使った移動
-            rb.MovePosition(rb.position + move * moveSpeed * Time.deltaTime);
+            // 入力ベクトルを取得
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
 
-            // 回転処理 (移動方向に向かって回転)
-            Quaternion targetRotation = Quaternion.LookRotation(move);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
+            // カメラ基準で移動方向を計算
+            Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
 
-        // ジャンプ処理
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            Vector3 jumpDirection = transform.forward; // 向いている方向に飛ぶ
-            rb.AddForce((jumpDirection + Vector3.up) * jumpForce, ForceMode.Impulse);
+            if (moveDirection.magnitude == 0)
+            {
+                // 入力がない場合は移動しない
+                return;
+            }
+
+            // ジャンプ距離を決定
+            float jumpDistance = smallJumpDistance;
+            if (Input.GetKey(dashKey))
+            {
+                jumpDistance = normalJumpDistance; // ダッシュ中は中ジャンプ
+            }
+            if (Input.GetKey(jumpKey))
+            {
+                jumpDistance = largeJumpDistance; // ジャンプボタンで大ジャンプ
+            }
+
+            // ジャンプ方向を計算
+            Vector3 jumpVelocity = moveDirection * jumpDistance;
+            jumpVelocity.y = Mathf.Sqrt(2 * jumpHeight * Physics.gravity.magnitude);
+
+            // Rigidbodyにジャンプ力を適用
+            rb.velocity = jumpVelocity;
+
+            isGrounded = false;
         }
+    }
+
+    private void HandleRotation()
+    {
+        // 入力ベクトルを取得
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
+        if (direction.magnitude == 0) return;
+
+        // カメラ基準で向きを計算
+        Vector3 targetDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
+        targetDirection.y = 0;
+
+        // 向きを滑らかに回転
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
     public void Stop()
     {
-        isStopped = true; // 停止フラグを設定
-        rb.velocity = Vector3.zero; // 速度をリセット
+        isStopped = true;
+        rb.velocity = Vector3.zero;
     }
 
     public void Move()
     {
-        isStopped = false; // 停止フラグを解除
+        isStopped = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.contacts.Length > 0 && collision.contacts[0].normal.y > 0.5f)
+        {
+            isGrounded = true;
+        }
     }
 }
