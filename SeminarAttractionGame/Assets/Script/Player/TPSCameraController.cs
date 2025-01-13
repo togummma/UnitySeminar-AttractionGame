@@ -72,13 +72,21 @@ public class TPSCameraController : MonoBehaviour
 
     private void HandleMouseInput()
     {
-        // マウス入力で回転角度を更新
-        yaw += Input.GetAxis("Mouse X") * rotationSpeed;
-        pitch -= Input.GetAxis("Mouse Y") * rotationSpeed;
+        if (Input.GetAxis("RightStickHorizontal") != 0)
+        {
+            Debug.Log("RightStickHorizontal: " + Input.GetAxis("RightStickHorizontal"));
+        }
+        // マウスおよびコントローラー入力で回転角度を更新
+        float inputX = Input.GetAxis("Mouse X") + Input.GetAxis("RightStickHorizontal");
+        float inputY = Input.GetAxis("Mouse Y") + Input.GetAxis("RightStickVertical");
+
+        yaw += inputX * rotationSpeed;
+        pitch -= inputY * rotationSpeed;
 
         // 垂直方向の回転角度を制限
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
     }
+
 
     private void UpdateCameraPosition()
     {
