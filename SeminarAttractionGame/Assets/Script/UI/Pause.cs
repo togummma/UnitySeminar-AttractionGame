@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Pause : MonoBehaviour
 {
@@ -17,6 +18,12 @@ public class Pause : MonoBehaviour
         if (playButton != null)
         {
             playButton.onClick.AddListener(OnPlayButtonClicked);
+        }
+
+        // 再開ボタンを選択
+        if (playButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(playButton.gameObject);
         }
     }
 

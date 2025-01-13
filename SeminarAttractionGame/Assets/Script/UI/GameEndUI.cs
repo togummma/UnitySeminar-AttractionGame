@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameEndUI : MonoBehaviour
 {
@@ -73,6 +74,13 @@ public class GameEndUI : MonoBehaviour
         retryButton.gameObject.SetActive(true);
         stageSelectButton.gameObject.SetActive(true);
         titleButton.gameObject.SetActive(true);
+
+        // 初期選択ボタンを設定
+        Button defaultButton = isClear ? nextStageButton : retryButton;
+        if (defaultButton != null && defaultButton.gameObject.activeSelf)
+        {
+            EventSystem.current.SetSelectedGameObject(defaultButton.gameObject);
+        }
     }
 
     private void OnRetryButtonClicked()

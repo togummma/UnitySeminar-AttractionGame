@@ -88,4 +88,12 @@ public class TitleSceneUI : MonoBehaviour
         #endif
     }
 
+    private void Update()
+    {
+        if(Input.GetAxis("DPadHorizontal") != 0){Debug.Log("DPadHorizontal: " + Input.GetAxis("DPadHorizontal"));}
+        if(Input.GetAxis("DPadVertical") != 0){Debug.Log("DPadVertical: " + Input.GetAxis("DPadVertical"));}
+        if(Input.GetAxis("Horizontal") != 0){Debug.Log("Horizontal: " + Input.GetAxis("Horizontal"));}
+        if(Input.GetAxis("Vertical") != 0){Debug.Log("Vertical: " + Input.GetAxis("Vertical"));}
+    }
+
 }

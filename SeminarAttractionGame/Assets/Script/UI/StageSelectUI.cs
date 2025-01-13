@@ -2,11 +2,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class StageSelectUI : MonoBehaviour
 {
     [SerializeField] private Transform stageListContainer; // ステージボタンの親オブジェクト
     [SerializeField] private Button stageButtonPrefab;     // ステージボタンのプレハブ（TextMeshProを含む）
+
+    private Button firstSelectableButton;                 // 最初に選択されるボタン
 
     private void Awake()
     {
@@ -20,13 +23,18 @@ public class StageSelectUI : MonoBehaviour
 
         // ステージリスト表示
         DisplayStageList();
+
+        // デフォルト選択を設定
+        if (firstSelectableButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(firstSelectableButton.gameObject);
+        }
     }
 
     private void DisplayStageList()
     {
         Debug.Log("DisplayStageList - スタート");
 
-        // ステージ順序のロード
         string[] stageOrder = UserStageDataHandler.LoadStageOrder();
         if (stageOrder == null || stageOrder.Length == 0)
         {
@@ -34,7 +42,6 @@ public class StageSelectUI : MonoBehaviour
             return;
         }
 
-        // データのロード
         GameData data = UserStageDataHandler.LoadData();
         if (data == null)
         {
@@ -48,7 +55,8 @@ public class StageSelectUI : MonoBehaviour
             }
         }
 
-        // ステージごとにボタン生成
+        Button previousButton = null; // ナビゲーション用の前のボタン
+
         foreach (var stageName in stageOrder)
         {
             Debug.Log($"ステージ処理: {stageName}");
@@ -60,7 +68,6 @@ public class StageSelectUI : MonoBehaviour
                 continue;
             }
 
-            // ボタン生成
             Button stageButton = Instantiate(stageButtonPrefab, stageListContainer);
             TextMeshProUGUI buttonText = stageButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonText != null)
@@ -68,20 +75,19 @@ public class StageSelectUI : MonoBehaviour
                 buttonText.text = stageName;
             }
 
-            if (!stageInfo.isUnlocked) // ロック状態
+            if (!stageInfo.isUnlocked)
             {
-                stageButton.interactable = false; // ボタンを無効化
+                stageButton.interactable = false;
                 if (buttonText != null)
                 {
                     buttonText.text += " (ロック)";
                 }
                 Debug.Log($"ステージロック: {stageName}");
             }
-            else // アンロック状態
+            else
             {
                 if (buttonText != null)
                 {
-                    // ベストタイム表示
                     if (stageInfo.bestTime > 0)
                     {
                         buttonText.text += $" (ベストタイム: {FormatTime(stageInfo.bestTime)})";
@@ -92,7 +98,6 @@ public class StageSelectUI : MonoBehaviour
                     }
                 }
 
-                // ステージ遷移イベント追加
                 stageButton.onClick.AddListener(() =>
                 {
                     Debug.Log($"ステージ遷移: {stageName}");
@@ -100,6 +105,27 @@ public class StageSelectUI : MonoBehaviour
                 });
             }
 
+            // 最初の選択ボタンを設定
+            if (firstSelectableButton == null && stageButton.interactable)
+            {
+                firstSelectableButton = stageButton;
+            }
+
+            // ナビゲーション設定
+            if (previousButton != null)
+            {
+                Navigation navigation = previousButton.navigation;
+                navigation.mode = Navigation.Mode.Explicit;
+                navigation.selectOnDown = stageButton;
+                previousButton.navigation = navigation;
+
+                navigation = stageButton.navigation;
+                navigation.mode = Navigation.Mode.Explicit;
+                navigation.selectOnUp = previousButton;
+                stageButton.navigation = navigation;
+            }
+
+            previousButton = stageButton;
             Debug.Log($"ボタン追加: {stageName}");
         }
 

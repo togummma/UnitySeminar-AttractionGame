@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1705
     height: 1333
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Inspector
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 152
+  controlID: 151
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -297,8 +297,8 @@ MonoBehaviour:
     y: 0
     width: 429
     height: 1283
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 20}
   m_Panes:
   - {fileID: 20}
@@ -844,9 +844,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -2.9710398, y: -1.2769423, z: -5.8429317}
+    m_Target: {x: 256.97592, y: -27.173885, z: 321.8461}
     speed: 2
-    m_Value: {x: -2.9710398, y: -1.2769423, z: -5.8429317}
+    m_Value: {x: 256.97592, y: -27.173885, z: 321.8461}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -892,13 +892,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.24875824, y: 0.16037439, z: -0.041804764, w: 0.95428663}
+    m_Target: {x: 0.15658027, y: -0.34593084, z: 0.058671135, w: 0.92324585}
     speed: 2
-    m_Value: {x: 0.24875684, y: 0.1603735, z: -0.04180453, w: 0.9542813}
+    m_Value: {x: 0.15657943, y: -0.345929, z: 0.058670823, w: 0.9232409}
   m_Size:
-    m_Target: 53.20705
+    m_Target: 464.32034
     speed: 2
-    m_Value: 53.20705
+    m_Value: 464.32034
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1028,9 +1028,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 4c650000
-      m_LastClickedID: 0
-      m_ExpandedIDs: 8064feffac91feff2e92feff9092feff3096feffd299feffe09afeff4c9cfefff49cfeffe29efeffdaa2feff4ebbfeff5cc5fefffccbfeff48d7feff56f0feffccf0feffbe0bffff3012fffffa51ffff2c53fffffe73ffff147affffe481ffff0683ffffd888ffff8689ffffd88cffff248effff4891ffffae9affff709bffff36a1ffff5ea1ffff4ea8ffff1eaaffffbcaeffffc6aeffff4cafffff84b0ffffb6b1ffff84b8ffff76bcffff2cbdffff0cfbfffff060000002610000966100007e7500001e800000e28100000684000098b000003eb10000dcc60000f0c60000f8d200003ade0000acf50000c0f500001ef700007e250100a4250100cc250100
+      m_SelectedIDs: 06890000
+      m_LastClickedID: 35078
+      m_ExpandedIDs: a2c8ffffb8cdffffeecefffff2faffffe2610000f66100001262000002800000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1099,7 +1099,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefab/UI
+    - Assets/Script/UI
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1107,30 +1107,30 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefab/UI
+  - Assets/Script/UI
   m_LastFoldersGridSize: 16
   m_LastProjectPath: D:\MyFolder\MyFolder2024\41.repository\UnitySeminar-AttractionGame\SeminarAttractionGame
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: f0640000
-    m_LastClickedID: 25840
-    m_ExpandedIDs: 000000009c6400009e640000a0640000b6640000cc640000d464000000ca9a3b
+    m_SelectedIDs: c4640000
+    m_LastClickedID: 25796
+    m_ExpandedIDs: 000000008a6400008c6400008e64000090640000926400009464000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: UI
-      m_OriginalName: UI
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 25802
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_SearchString: 
@@ -1144,7 +1144,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 5e5a0000
     m_LastClickedID: 23134
-    m_ExpandedIDs: 000000009c6400009e640000a0640000
+    m_ExpandedIDs: 000000008a6400008c6400008e640000906400009264000094640000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
