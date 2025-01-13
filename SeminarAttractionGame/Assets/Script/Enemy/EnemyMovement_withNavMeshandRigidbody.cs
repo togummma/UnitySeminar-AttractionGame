@@ -64,29 +64,28 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
     }
 
    void FixedUpdate()
+{
+    if (!isStopped)
     {
-        if (!isStopped)
+        // NavMeshAgentのパス情報を取得
+        if (navMeshAgent.path.corners.Length > 1)
         {
-            // NavMeshAgentの次の位置を取得
-            Vector3 nextPosition = navMeshAgent.nextPosition;
+            Vector3 nextCorner = navMeshAgent.path.corners[1]; // 次のコーナーを取得
+            Vector3 direction = (nextCorner - transform.position).normalized;
 
-            // 移動方向の計算
-            Vector3 direction = (nextPosition - rb.position).normalized;
+            // 移動処理
+            rb.MovePosition(transform.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
 
-            // Rigidbodyを使用して移動
-            rb.MovePosition(rb.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
-
-            // NavMeshAgentとRigidbodyの位置を同期
-            navMeshAgent.nextPosition = rb.position;
-
-            // 回転を進行方向に合わせる
-            if (direction != Vector3.zero)
+            // 回転処理（進行方向に向ける）
+            if (direction.sqrMagnitude > 0.01f) // ゼロベクトルを無視
             {
-                Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up); // 進行方向を計算
-                rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f)); // スムーズに回転
+                Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f);
             }
         }
     }
+}
+
 
 
 public void Stop()
