@@ -72,10 +72,6 @@ public class TPSCameraController : MonoBehaviour
 
     private void HandleMouseInput()
     {
-        if (Input.GetAxis("RightStickHorizontal") != 0)
-        {
-            Debug.Log("RightStickHorizontal: " + Input.GetAxis("RightStickHorizontal"));
-        }
         // マウスおよびコントローラー入力で回転角度を更新
         float inputX = Input.GetAxis("Mouse X") + Input.GetAxis("RightStickHorizontal");
         float inputY = Input.GetAxis("Mouse Y") + Input.GetAxis("RightStickVertical");

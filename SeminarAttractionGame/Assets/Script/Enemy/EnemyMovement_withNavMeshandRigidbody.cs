@@ -7,32 +7,20 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
 {
     private NavMeshAgent navMeshAgent;
     private Rigidbody rb;
-
     private bool isStopped = false; // 停止フラグ
 
     void Awake()
     {
-        // NavMeshAgentコンポーネントを追加または取得
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        if (navMeshAgent == null)
-        {
-            navMeshAgent = gameObject.AddComponent<NavMeshAgent>();
-        }
-
-        // Rigidbodyコンポーネントを追加または取得
-        rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-        }
-
-        // Rigidbodyの設定
-        rb.isKinematic = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-
-        // NavMeshAgentの設定をカスタマイズ
+        // NavMeshAgentの初期化
+        navMeshAgent = GetComponent<NavMeshAgent>() ?? gameObject.AddComponent<NavMeshAgent>();
         navMeshAgent.updatePosition = false;
         navMeshAgent.updateRotation = false;
+
+        // Rigidbodyの初期化
+        rb = GetComponent<Rigidbody>() ?? gameObject.AddComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     void OnEnable()
@@ -57,57 +45,69 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
     {
         if (newState == GameStateManager.GameState.Playing)
         {
-            Move(); // プレイ中は動作を許可
+            Move();
         }
         else
         {
-            Stop(); // プレイ中以外は停止
+            Stop();
         }
     }
 
     void Update()
     {
-        if (!isStopped) // 停止中でない場合のみ動作
+        if (!isStopped)
         {
+            // NavMeshAgentに目的地を設定
             Vector3 targetPosition = PlayerPositionProvider.GetPlayerPosition();
             navMeshAgent.SetDestination(targetPosition);
         }
     }
 
-    void FixedUpdate()
+   void FixedUpdate()
     {
-        if (!isStopped && navMeshAgent.path.corners.Length > 1) // 停止中でない場合のみ動作
+        if (!isStopped)
         {
-            Vector3 nextPosition = navMeshAgent.path.corners[1]; // 次のコーナー
-            Vector3 direction = (nextPosition - transform.position).normalized;
+            // NavMeshAgentの次の位置を取得
+            Vector3 nextPosition = navMeshAgent.nextPosition;
 
-            // 移動
-            rb.MovePosition(transform.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
+            // 移動方向の計算
+            Vector3 direction = (nextPosition - rb.position).normalized;
 
-            // 回転（進行方向に向ける）
+            // Rigidbodyを使用して移動
+            rb.MovePosition(rb.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
+
+            // NavMeshAgentとRigidbodyの位置を同期
+            navMeshAgent.nextPosition = rb.position;
+
+            // 回転を進行方向に合わせる
             if (direction != Vector3.zero)
             {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f);
+                Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up); // 進行方向を計算
+                rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f)); // スムーズに回転
             }
         }
     }
 
-    public void Stop()
+
+public void Stop()
+{
+    isStopped = true;
+    navMeshAgent.isStopped = true;
+
+    // kinematicを有効化する前に速度をリセット
+    if (!rb.isKinematic)
     {
-        isStopped = true; // 停止フラグを設定
-        navMeshAgent.isStopped = true; // NavMeshAgentを停止
-        if (!rb.isKinematic)
-        {
-            rb.velocity = Vector3.zero;
-        }
-        rb.isKinematic = true; // 最後に設定
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
+
+    rb.isKinematic = true; // 最後にkinematicを有効化
+}
 
     public void Move()
     {
-        isStopped = false; // 停止フラグを解除
-        navMeshAgent.isStopped = false; // NavMeshAgentを再開
-        rb.isKinematic = false; // Rigidbodyを動作可能に設定
+        isStopped = false;
+        navMeshAgent.isStopped = false;
+        rb.isKinematic = false;     // 物理演算を有効化
     }
 }
