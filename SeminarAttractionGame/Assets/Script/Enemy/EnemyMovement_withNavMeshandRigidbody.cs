@@ -63,21 +63,24 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
         }
     }
 
-   void FixedUpdate()
+    void FixedUpdate()
 {
     if (!isStopped)
     {
-        // NavMeshAgentのパス情報を取得
+        // NavMeshAgentとRigidbodyの位置を同期
+        navMeshAgent.nextPosition = rb.position;
+
+        // パス情報が存在する場合、移動処理を実行
         if (navMeshAgent.path.corners.Length > 1)
         {
-            Vector3 nextCorner = navMeshAgent.path.corners[1]; // 次のコーナーを取得
+            Vector3 nextCorner = navMeshAgent.path.corners[1];
             Vector3 direction = (nextCorner - transform.position).normalized;
 
             // 移動処理
             rb.MovePosition(transform.position + direction * navMeshAgent.speed * Time.fixedDeltaTime);
 
-            // 回転処理（進行方向に向ける）
-            if (direction.sqrMagnitude > 0.01f) // ゼロベクトルを無視
+            // 回転処理
+            if (direction.sqrMagnitude > 0.01f)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f);
@@ -87,26 +90,44 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
 }
 
 
-
-public void Stop()
-{
-    isStopped = true;
-    navMeshAgent.isStopped = true;
+    public void Stop()
+    {
+        isStopped = true;
+        navMeshAgent.isStopped = true;
 
     // kinematicを有効化する前に速度をリセット
-    if (!rb.isKinematic)
-    {
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-    }
+        if (!rb.isKinematic)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
 
     rb.isKinematic = true; // 最後にkinematicを有効化
-}
+    }
 
     public void Move()
     {
         isStopped = false;
         navMeshAgent.isStopped = false;
-        rb.isKinematic = false;     // 物理演算を有効化
+        rb.isKinematic = false;
+    }
+
+    // シーンビューに移動経路とプレイヤー位置を描画
+    void OnDrawGizmos()
+    {
+        if (navMeshAgent == null || navMeshAgent.path == null) return;
+
+        // NavMeshAgentの経路を描画
+        Gizmos.color = Color.green;
+        Vector3[] corners = navMeshAgent.path.corners;
+        for (int i = 0; i < corners.Length - 1; i++)
+        {
+            Gizmos.DrawLine(corners[i], corners[i + 1]);
+        }
+
+        // プレイヤーの位置を描画
+        Gizmos.color = Color.red;
+        Vector3 playerPosition = PlayerPositionProvider.GetPlayerPosition();
+        Gizmos.DrawSphere(playerPosition, 0.5f); // 半径0.5の赤い球を描画
     }
 }
