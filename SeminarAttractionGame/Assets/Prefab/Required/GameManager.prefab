@@ -78,7 +78,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 1
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 4933bdb6aa50dbf40b10c09acce2c1a4, type: 2}
+  m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
 --- !u!114 &1927711087738827035
 MonoBehaviour:
@@ -92,6 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8f84dd9b6d1aa468802135afd804a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayingBGM: {fileID: 8300000, guid: a0bb06d6e029ff3499f894a8a6003384, type: 3}
+  GameClearBGM: {fileID: 8300000, guid: e56162a2052c4154eb0e65a36dead49b, type: 3}
+  GameOverBGM: {fileID: 8300000, guid: e5dec053e74ad4246ab01ff5e3cc0306, type: 3}
 --- !u!114 &813769051465433220
 MonoBehaviour:
   m_ObjectHideFlags: 0

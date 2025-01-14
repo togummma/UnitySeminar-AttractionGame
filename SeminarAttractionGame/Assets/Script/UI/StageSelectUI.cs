@@ -8,6 +8,9 @@ public class StageSelectUI : MonoBehaviour
 {
     [SerializeField] private Transform stageListContainer; // ステージボタンの親オブジェクト
     [SerializeField] private Button stageButtonPrefab;     // ステージボタンのプレハブ（TextMeshProを含む）
+    [SerializeField] private AudioClip bgm;                // ステージ選択画面のBGM
+    [SerializeField] private AudioClip clickSE;            // ボタンクリック効果音
+    [SerializeField] private AudioClip selectSE;           // ボタン選択効果音
 
     private Button firstSelectableButton;                 // 最初に選択されるボタン
 
@@ -19,6 +22,12 @@ public class StageSelectUI : MonoBehaviour
         {
             Debug.LogError("ステージリストのコンテナまたはボタンプレハブが設定されていません！");
             return;
+        }
+
+        // ステージ選択画面BGM再生
+        if (bgm != null)
+        {
+            AudioManager.Instance.PlayBGM(bgm);
         }
 
         // ステージリスト表示
@@ -100,10 +109,18 @@ public class StageSelectUI : MonoBehaviour
 
                 stageButton.onClick.AddListener(() =>
                 {
+                    if (clickSE != null)
+                    {
+                        AudioManager.Instance.PlaySE(clickSE);
+                    }
+
                     Debug.Log($"ステージ遷移: {stageName}");
                     SceneManager.LoadScene(stageName);
                 });
             }
+
+            // ハイライト時の効果音を設定
+            AddHighlightSound(stageButton);
 
             // 最初の選択ボタンを設定
             if (firstSelectableButton == null && stageButton.interactable)
@@ -137,5 +154,25 @@ public class StageSelectUI : MonoBehaviour
         int minutes = Mathf.FloorToInt(time / 60);
         float seconds = time % 60;
         return string.Format("{0:00}:{1:00.00}", minutes, seconds);
+    }
+
+    // ボタンにハイライト時の効果音を追加
+    private void AddHighlightSound(Button button)
+    {
+        EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        entry.callback.AddListener((_) =>
+        {
+            if (selectSE != null)
+            {
+                AudioManager.Instance.PlaySE(selectSE);
+            }
+        });
+
+        trigger.triggers.Add(entry);
     }
 }

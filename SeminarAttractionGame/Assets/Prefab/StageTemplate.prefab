@@ -1759,8 +1759,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownPanel: {fileID: 7506472851182267629}
   countdownLabel: {fileID: 1213624103242679608}
-  countdownClip: {fileID: 0}
-  startClip: {fileID: 0}
+  countdownClip: {fileID: 8300000, guid: de63844ead99b1b4b8899dfaa2bf6cfd, type: 3}
+  startClip: {fileID: 8300000, guid: d7350d8cc2ae24d42a5186d8c033fcbb, type: 3}
 --- !u!114 &7009331405012535172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2068,10 +2068,6 @@ PrefabInstance:
     - target: {fileID: 6869856884517967338, guid: bfb0223937be28f4d8f1459bc30dbc2d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7333850369109033754, guid: bfb0223937be28f4d8f1459bc30dbc2d, type: 3}
-      propertyPath: m_NavMeshData
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

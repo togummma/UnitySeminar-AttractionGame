@@ -12,6 +12,10 @@ using System; // Actionを使うため
 
 public class GameStateManager : MonoBehaviour
 {
+    [SerializeField] private AudioClip PlayingBGM; // ゲームプレイ中のBGM
+    [SerializeField] private AudioClip GameClearBGM; // ゲームクリア時のBGM
+    [SerializeField] private AudioClip GameOverBGM; // ゲームオーバー時のBGM
+    
     public static GameStateManager Instance; // シングルトンパターン（任意）
 
     private int totalGoalItems; // ゴールアイテムの総数
@@ -25,16 +29,14 @@ public class GameStateManager : MonoBehaviour
     //  これを最初に宣言されないと､購読できないため､このスクリプトは優先的に実行する
     public event Action<GameState> OnGameStateChanged;
 
-    private void Awake()
+     private void Awake()
     {
-        if (Instance == null)
+        // インスタンスの初期化
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
+            Destroy(Instance.gameObject); // 既存のインスタンスを削除
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
     }
 
     void Start()
@@ -71,6 +73,7 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.Log("ゲーム準備完了！");
         SetState(GameState.Ready); // 状態を更新
+        AudioManager.Instance.StopBGM(); // BGM停止
     }
 
     public void StartCountdown()
@@ -84,6 +87,7 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.Log("ゲームスタート！");
         SetState(GameState.Playing); // 状態を更新
+        AudioManager.Instance.PlayBGM(PlayingBGM); // BGM再生
     }
 
     public void CollectGoalItem()
@@ -101,6 +105,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("ゲームクリア！");
             SetState(GameState.GameClear); // 状態を更新
             // ゲームクリア処理をここに記述
+            AudioManager.Instance.PlayBGM(GameClearBGM); // BGM再生
         }
     }
 
@@ -111,6 +116,7 @@ public class GameStateManager : MonoBehaviour
         Debug.Log("ゲームオーバー！");
         SetState(GameState.GameOver); // 状態を更新
         // ゲームオーバー処理をここに記述
+        AudioManager.Instance.PlayBGM(GameOverBGM); // BGM再生
     }
 
     public int GetRemainingGoalItems()

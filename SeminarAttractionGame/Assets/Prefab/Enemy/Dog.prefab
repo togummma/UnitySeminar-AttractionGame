@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 3536769544856722229}
   - component: {fileID: 5354257934720630681}
   - component: {fileID: 1831079285121850545}
+  - component: {fileID: 5596723335957167766}
+  - component: {fileID: 5740389786178819582}
   m_Layer: 0
   m_Name: Dog
   m_TagString: Enemy
@@ -119,6 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca29d877683c50428435f9c0150e43d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitSE: {fileID: 8300000, guid: 43ab877432138dc4fbb8f5a1499b6904, type: 3}
 --- !u!114 &1831079285121850545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +136,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   rotationSpeed: 1000
+--- !u!114 &5596723335957167766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3638025344025328823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df10e7ad9062f243904c87abfd60ea0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cryClip: {fileID: 8300000, guid: 85d79c2d2c89a764597cf38ab7a42413, type: 3}
+  minInterval: 2
+  maxInterval: 10
+--- !u!114 &5740389786178819582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3638025344025328823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f58f801d574efc4abe12fd3df1eb056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4622049993437556276
 PrefabInstance:
   m_ObjectHideFlags: 0

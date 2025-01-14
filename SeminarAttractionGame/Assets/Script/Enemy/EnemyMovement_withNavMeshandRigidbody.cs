@@ -130,4 +130,9 @@ public class EnemyMovement_withNavMeshandRigidbody : MonoBehaviour
         Vector3 playerPosition = PlayerPositionProvider.GetPlayerPosition();
         Gizmos.DrawSphere(playerPosition, 0.5f); // 半径0.5の赤い球を描画
     }
+
+    public bool IsStopped()
+    {
+        return isStopped;
+    }
 }
