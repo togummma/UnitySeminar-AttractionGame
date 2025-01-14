@@ -99,7 +99,7 @@ public class GameEndUI : MonoBehaviour
             }
             else
             {
-                Debug.LogError("次のステージが見つかりません。");
+                Debug.Log("次のステージが見つかりません。");
                 SceneManager.LoadScene("TitleScene");
             }
         }

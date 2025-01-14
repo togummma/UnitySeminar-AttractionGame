@@ -5,6 +5,12 @@ public abstract class EnemyBase : MonoBehaviour
 {
     protected NavMeshAgent navMeshAgent;
     protected Rigidbody rb;
+
+    [SerializeField]
+    protected float moveSpeed = 7.0f; // デフォルトの移動速度
+    [SerializeField]
+    protected float rotationSpeed = 1000f; // デフォルトの回転速度 (度/秒)
+
     private bool isStopped = false;
 
     protected virtual void Awake()
@@ -73,14 +79,17 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
-    protected abstract void PerformMovement(Vector3 direction);
+    protected virtual void PerformMovement(Vector3 direction)
+    {
+        rb.MovePosition(transform.position + direction * moveSpeed * Time.fixedDeltaTime);
+    }
 
     protected virtual void PerformRotation(Vector3 direction)
     {
         if (direction.sqrMagnitude > 0.01f)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * navMeshAgent.angularSpeed / 100f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed / 360f);
         }
     }
 

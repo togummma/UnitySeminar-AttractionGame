@@ -3,17 +3,17 @@
         {
             "sceneName": "Test1",
             "isUnlocked": true,
-            "bestTime": 0.6590673923492432
+            "bestTime": 0.219131737947464
         },
         {
             "sceneName": "Test2",
             "isUnlocked": true,
-            "bestTime": 16.699382781982423
+            "bestTime": 16.589250564575197
         },
         {
             "sceneName": "Test3",
             "isUnlocked": true,
-            "bestTime": 31.694067001342775
+            "bestTime": 26.913835525512697
         }
     ]
 }
