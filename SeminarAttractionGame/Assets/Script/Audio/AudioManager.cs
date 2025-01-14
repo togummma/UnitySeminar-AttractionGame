@@ -2,16 +2,36 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] private AudioSource seSource; // 効果音用AudioSource
+    [SerializeField] private AudioSource seSource;  // 効果音用AudioSource
     [SerializeField] private AudioSource bgmSource; // BGM用AudioSource
-    public static AudioManager Instance;          // シングルトンインスタンス
+    private static AudioManager _instance;
+
+    public static AudioManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // AudioManagerの動的生成
+                GameObject obj = new GameObject("AudioManager");
+                _instance = obj.AddComponent<AudioManager>();
+
+                // AudioSourceの自動追加と設定
+                _instance.seSource = obj.AddComponent<AudioSource>();
+                _instance.bgmSource = obj.AddComponent<AudioSource>();
+                _instance.bgmSource.loop = true; // BGMはループ再生
+                DontDestroyOnLoad(obj);
+            }
+            return _instance;
+        }
+    }
 
     private void Awake()
     {
-        if (Instance == null)
+        if (_instance == null)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // シーンをまたいで維持
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -19,7 +39,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // 効果音（SE）を再生
+    // 効果音の再生
     public void PlaySE(AudioClip clip)
     {
         if (seSource != null && clip != null)
@@ -32,30 +52,23 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // BGMを再生
+    // BGMの再生
     public void PlayBGM(AudioClip clip)
-{
-    if (bgmSource != null)
     {
-        if (bgmSource.isPlaying && bgmSource.clip == clip)
+        if (bgmSource != null)
         {
-            // 同じBGMが既に再生中なら何もしない
-            return;
+            if (bgmSource.isPlaying && bgmSource.clip == clip) return;
+            bgmSource.Stop();
+            bgmSource.clip = clip;
+            bgmSource.Play();
         }
-
-        bgmSource.Stop(); // 再生中のBGMを停止
-        bgmSource.clip = clip;
-        bgmSource.loop = true; // BGMはループ再生
-        bgmSource.Play();
+        else
+        {
+            Debug.LogError("BGM用AudioSourceまたはAudioClipが設定されていません！");
+        }
     }
-    else
-    {
-        Debug.LogError("BGM用AudioSourceまたはAudioClipが設定されていません！");
-    }
-}
 
-
-    // BGMを停止
+    // BGMの停止
     public void StopBGM()
     {
         if (bgmSource != null)

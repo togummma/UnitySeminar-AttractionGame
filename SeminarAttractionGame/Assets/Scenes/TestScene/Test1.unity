@@ -4858,7 +4858,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownPanel: {fileID: 7787508722247543292}
   countdownLabel: {fileID: 1506797212584558633}
-  audioSource: {fileID: 9201190596242704608}
   countdownClip: {fileID: 8300000, guid: de63844ead99b1b4b8899dfaa2bf6cfd, type: 3}
   startClip: {fileID: 8300000, guid: d7350d8cc2ae24d42a5186d8c033fcbb, type: 3}
 --- !u!1 &4783354656096149546
@@ -5220,7 +5219,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 960.00006, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &5341977543870132424
