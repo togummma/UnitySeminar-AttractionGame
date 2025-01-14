@@ -6,6 +6,7 @@ public class HUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text timerLabel;     // タイマー表示用テキスト
     [SerializeField] private TMP_Text sceneLabel;    // シーン名表示用テキスト
+    [SerializeField] private TMP_Text goalItemLabel; // ゴールアイテム数表示用テキスト
 
     private GameDataManager gameDataManager;
 
@@ -33,6 +34,13 @@ public class HUD : MonoBehaviour
             int minutes = Mathf.FloorToInt(elapsedTime / 60);
             float seconds = elapsedTime % 60;
             timerLabel.text = string.Format("{0:00}:{1:00.00}", minutes, seconds);
+        }
+
+         // ゴールアイテム数表示
+        if (goalItemLabel != null && GameStateManager.Instance != null)
+        {
+            int remainingGoalItems = GameStateManager.Instance.GetRemainingGoalItems();
+            goalItemLabel.text = "Rem: " + remainingGoalItems;
         }
     }
 }

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   postPrefab: {fileID: 8106688706154395961, guid: 0e2df304985d4df40bd0a458819845ab, type: 3}
-  minimumSpacing: 15
+  minimumSpacing: 10
   rotationOffset: {x: 0, y: 90, z: 0}
 --- !u!114 &1228525441116961401
 MonoBehaviour:

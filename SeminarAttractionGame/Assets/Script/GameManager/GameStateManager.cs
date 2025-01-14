@@ -113,4 +113,9 @@ public class GameStateManager : MonoBehaviour
         // ゲームオーバー処理をここに記述
     }
 
+    public int GetRemainingGoalItems()
+    {
+        return totalGoalItems - collectedGoalItems;
+    }
+
 }
