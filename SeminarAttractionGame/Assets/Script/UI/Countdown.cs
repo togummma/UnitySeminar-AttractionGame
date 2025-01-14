@@ -6,17 +6,11 @@ public class CountdownUI : MonoBehaviour
 {
     [SerializeField] private GameObject countdownPanel; // カウントダウン表示用パネル
     [SerializeField] private TMP_Text countdownLabel;   // カウントダウン表示用テキスト
-    [SerializeField] private AudioSource audioSource;  // オーディオソース
     [SerializeField] private AudioClip countdownClip;  // カウントダウン用効果音
     [SerializeField] private AudioClip startClip;      // スタート用効果音
 
     private void Start()
     {
-        if (audioSource != null)
-        {
-            audioSource.ignoreListenerPause = true; // タイムスケールに関係なく再生を続ける
-        }
-        
         if (countdownPanel != null)
         {
             countdownPanel.SetActive(false); // 初期状態で非表示
@@ -59,11 +53,10 @@ public class CountdownUI : MonoBehaviour
                 countdownLabel.text = countdown.ToString();
             }
 
-            // カウントダウン効果音を再生
-            if (audioSource != null && countdownClip != null)
+            // AudioManagerを利用してカウントダウン効果音を再生
+            if (countdownClip != null)
             {
-                Debug.Log("カウントダウン効果音を再生");
-                audioSource.PlayOneShot(countdownClip);
+                AudioManager.Instance.PlaySE(countdownClip);
             }
 
             yield return new WaitForSecondsRealtime(1);
@@ -75,10 +68,10 @@ public class CountdownUI : MonoBehaviour
             countdownLabel.text = "スタート！";
         }
 
-        // スタート効果音を再生
-        if (audioSource != null && startClip != null)
+        // AudioManagerを利用してスタート効果音を再生
+        if (startClip != null)
         {
-            audioSource.PlayOneShot(startClip);
+            AudioManager.Instance.PlaySE(startClip);
         }
 
         yield return new WaitForSecondsRealtime(1);

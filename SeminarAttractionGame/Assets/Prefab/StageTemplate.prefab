@@ -1255,7 +1255,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 960.00006, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &734774001535514294
@@ -1759,6 +1759,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownPanel: {fileID: 7506472851182267629}
   countdownLabel: {fileID: 1213624103242679608}
+  countdownClip: {fileID: 0}
+  startClip: {fileID: 0}
 --- !u!114 &7009331405012535172
 MonoBehaviour:
   m_ObjectHideFlags: 0

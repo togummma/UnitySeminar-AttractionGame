@@ -7,6 +7,7 @@ public class RabbitMovement : MonoBehaviour
     [SerializeField] private float jumpHeight = 1f;         // ジャンプの高さ
     [SerializeField] private float rotationSpeed = 10f;     // 回転速度
     [SerializeField] private LayerMask groundLayer;         // 接地判定用レイヤー
+    [SerializeField] private AudioClip RabbitJumpClip;      // ジャンプ時のSE
 
     private Rigidbody rb;
     private Transform cameraTransform;  // 子オブジェクトのカメラ
@@ -77,34 +78,39 @@ public class RabbitMovement : MonoBehaviour
         HandleRotation();
     }
 
-    private void HandleGroundedMovement()
-{
-    // 入力ベクトルを取得
-    float horizontal = Input.GetAxis("Horizontal");
-    float vertical = Input.GetAxis("Vertical");
-
-    // カメラ基準で移動方向を計算
-    Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
-
-    if (isGrounded && moveDirection != Vector3.zero)
+   private void HandleGroundedMovement()
     {
-        // 必要な垂直ジャンプ速度を計算（ジャンプ高さを指定）
-        float verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * jumpHeight);
+        // 入力ベクトルを取得
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-        // 水平方向の速度を計算
-        Vector3 horizontalVelocity = moveDirection * moveSpeed;
+        // カメラ基準で移動方向を計算
+        Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
 
-        // ジャンプ速度を設定
-        Vector3 jumpVelocity = horizontalVelocity;
-        jumpVelocity.y = verticalVelocity;
+        // isGroundedがtrueの場合のみジャンプを実行
+        if (isGrounded && moveDirection != Vector3.zero)
+        {
+            // 必要な垂直ジャンプ速度を計算（ジャンプ高さを指定）
+            float verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * jumpHeight);
 
-        // 現在の速度をリセットして速度を適用
-        rb.velocity = jumpVelocity;
+            // 水平方向の速度を計算
+            Vector3 horizontalVelocity = moveDirection * moveSpeed;
 
-        // 接地フラグをオフにする
-        isGrounded = false;
+            // ジャンプ速度を設定
+            Vector3 jumpVelocity = horizontalVelocity;
+            jumpVelocity.y = verticalVelocity;
+
+            // 現在の速度をリセットして速度を適用
+            rb.velocity = jumpVelocity;
+
+            // 接地フラグをオフにする
+            isGrounded = false;
+
+            // SE再生 (一度のみ再生)
+            AudioManager.Instance.PlaySE(RabbitJumpClip);
+        }
     }
-}
+
 
     private void HandleRotation()
     {

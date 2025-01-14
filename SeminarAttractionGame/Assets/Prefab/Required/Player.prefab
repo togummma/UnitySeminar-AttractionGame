@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4813447058006642502}
   - component: {fileID: 3098021475542510619}
   - component: {fileID: 1203180218455157735}
+  - component: {fileID: 863520273293322810}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -101,6 +102,14 @@ MonoBehaviour:
   rotationSpeed: 5
   minPitch: -30
   maxPitch: 60
+--- !u!81 &863520273293322810
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693661684892499295}
+  m_Enabled: 1
 --- !u!1 &3875269529932143897
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,6 +212,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  RabbitJumpClip: {fileID: 8300000, guid: 191a544543a89e74ca302edd83ebd451, type: 3}
 --- !u!1001 &9041468240312707173
 PrefabInstance:
   m_ObjectHideFlags: 0
