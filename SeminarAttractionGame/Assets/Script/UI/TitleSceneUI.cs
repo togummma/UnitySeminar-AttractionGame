@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -7,12 +8,21 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private Button mainButton;          // スタート/続きから兼用ボタン
     [SerializeField] private Button stageSelectButton;   // ステージ選択ボタン
     [SerializeField] private Button exitButton;          // 終了ボタン
+    [SerializeField] private AudioClip BGM;              // タイトルBGM
+    [SerializeField] private AudioClip ClickSE;          // ボタンクリックSE
+    [SerializeField] private AudioClip SelectSE;         // ボタン選択SE
 
     private bool hasSaveData;                            // セーブデータがあるかどうか
 
     private void Start()
     {
         Debug.Log("TitleSceneUI Loaded!");
+
+        // タイトル画面BGM再生
+        if (BGM != null)
+        {
+            AudioManager.Instance.PlayBGM(BGM);
+        }
 
         // セーブデータの有無を確認
         hasSaveData = CheckSaveData();
@@ -22,7 +32,11 @@ public class TitleSceneUI : MonoBehaviour
         stageSelectButton.onClick.AddListener(OnStageSelectButtonClicked);
         exitButton.onClick.AddListener(OnExitButtonClicked);
 
-        // メインボタンのテキストは変更せず、機能を動的に変更
+        // ボタンにハイライト時の効果音を追加
+        AddHighlightSound(mainButton);
+        AddHighlightSound(stageSelectButton);
+        AddHighlightSound(exitButton);
+
         Debug.Log(hasSaveData ? "MainButton: Continue Mode" : "MainButton: Start Mode");
     }
 
@@ -36,6 +50,11 @@ public class TitleSceneUI : MonoBehaviour
     // メインボタン（スタート/続きから）クリック処理
     private void OnMainButtonClicked()
     {
+        if (ClickSE != null)
+        {
+            AudioManager.Instance.PlaySE(ClickSE);
+        }
+
         if (hasSaveData)
         {
             Debug.Log("Continue Button Clicked!");
@@ -52,6 +71,11 @@ public class TitleSceneUI : MonoBehaviour
     // ステージ選択画面へ移動
     private void OnStageSelectButtonClicked()
     {
+        if (ClickSE != null)
+        {
+            AudioManager.Instance.PlaySE(ClickSE);
+        }
+
         Debug.Log("Stage Select Button Clicked!");
         SceneManager.LoadScene("StageSelectScene"); // ステージ選択シーン名を指定
     }
@@ -80,6 +104,11 @@ public class TitleSceneUI : MonoBehaviour
     // ゲーム終了処理
     private void OnExitButtonClicked()
     {
+        if (ClickSE != null)
+        {
+            AudioManager.Instance.PlaySE(ClickSE);
+        }
+
         Debug.Log("Exit Button Clicked!");
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -88,5 +117,23 @@ public class TitleSceneUI : MonoBehaviour
         #endif
     }
 
+    // ボタンにハイライト時の効果音を追加
+    private void AddHighlightSound(Button button)
+    {
+        EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
 
+        EventTrigger.Entry entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        entry.callback.AddListener((_) =>
+        {
+            if (SelectSE != null)
+            {
+                AudioManager.Instance.PlaySE(SelectSE);
+            }
+        });
+
+        trigger.triggers.Add(entry);
+    }
 }
