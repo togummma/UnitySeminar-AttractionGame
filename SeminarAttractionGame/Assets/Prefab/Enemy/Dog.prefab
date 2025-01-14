@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2435274441241956217}
   - component: {fileID: 1601039072670259094}
   - component: {fileID: 3536769544856722229}
-  - component: {fileID: 4877633053281410604}
   - component: {fileID: 5354257934720630681}
+  - component: {fileID: 1831079285121850545}
   m_Layer: 0
   m_Name: Dog
   m_TagString: Enemy
@@ -107,18 +107,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4877633053281410604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3638025344025328823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f58f801d574efc4abe12fd3df1eb056, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5354257934720630681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,6 +117,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aca29d877683c50428435f9c0150e43d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1831079285121850545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3638025344025328823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e185aec220d75e94abdd0ffa64fbce1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4622049993437556276
