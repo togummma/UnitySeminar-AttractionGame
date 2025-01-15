@@ -2204,6 +2204,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4539136767775339924}
     m_Modifications:
+    - target: {fileID: 1203180218455157735, guid: 1eda3bc6abd7c42458c42ed67ee9e408, type: 3}
+      propertyPath: autoYawSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1203180218455157735, guid: 1eda3bc6abd7c42458c42ed67ee9e408, type: 3}
+      propertyPath: autoPitchSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3875269529932143897, guid: 1eda3bc6abd7c42458c42ed67ee9e408, type: 3}
       propertyPath: m_Name
       value: Player

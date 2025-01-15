@@ -5,18 +5,22 @@ using UnityEngine;
 public class TPSCameraController : MonoBehaviour
 {
     [Header("カメラ設定")]
-    [SerializeField] private float distanceFromTarget = 5f;   // ターゲットからの距離
+    [SerializeField] private float distanceFromTarget = 5f; // ターゲットからの距離
     [SerializeField] private Vector3 initialPositionOffset = new Vector3(0, 2, 0); // ターゲットからのオフセット
-    [SerializeField] private float rotationSpeed = 5f;        // 回転速度
-    [SerializeField] private float minPitch = -30f;           // 垂直方向の最小角度
-    [SerializeField] private float maxPitch = 60f;            // 垂直方向の最大角度
+    [SerializeField] private float rotationSpeed = 5f; // 回転速度
+    [SerializeField] private float minPitch = -30f; // 垂直方向の最小角度
+    [SerializeField] private float maxPitch = 60f; // 垂直方向の最大角度
 
-    private Transform target;   // ターゲット（親オブジェクト）
-    private float yaw = 0f;     // 水平方向の回転角
-    private float pitch = 0f;   // 垂直方向の回転角
+    [Header("自動回転設定")]
+    [SerializeField] private float autoYawSpeed = 1f; // 水平回転速度
+    [SerializeField] private float autoPitchSpeed = 0.5f; // 垂直回転速度
+    [SerializeField] private float defaultPitch = 10f; // デフォルトの垂直角度
+
+    private Transform target; // ターゲット（親オブジェクト）
+    private float yaw = 0f; // 水平方向の回転角
+    private float pitch = 0f; // 垂直方向の回転角
 
     private GameStateManager gameStateManager; // 状態管理スクリプトの参照
-
     private bool isCursorHidden = false; // マウスカーソルの非表示状態を追跡
 
     private void Start()
@@ -59,6 +63,7 @@ public class TPSCameraController : MonoBehaviour
 
         UpdateCursorVisibility(true);
         HandleMouseInput();
+        AutoAdjustRotation();
         UpdateCameraPosition();
     }
 
@@ -83,6 +88,16 @@ public class TPSCameraController : MonoBehaviour
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
     }
 
+    private void AutoAdjustRotation()
+    {
+        // 親オブジェクトの向きに自動水平回転
+        float targetYaw = target.eulerAngles.y;
+        yaw = Mathf.LerpAngle(yaw, targetYaw, autoYawSpeed * Time.deltaTime);
+
+        // 垂直回転を規定角度に戻す
+        pitch = Mathf.Lerp(pitch, defaultPitch, autoPitchSpeed * Time.deltaTime);
+        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+    }
 
     private void UpdateCameraPosition()
     {
