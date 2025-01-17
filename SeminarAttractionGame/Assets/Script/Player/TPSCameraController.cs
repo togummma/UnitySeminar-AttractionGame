@@ -12,7 +12,7 @@ public class TPSCameraController : MonoBehaviour
     [SerializeField] private float maxPitch = 60f; // 垂直方向の最大角度
 
     [Header("自動回転設定")]
-    [SerializeField] private float autoYawSpeed = 1f; // 水平回転速度
+    [SerializeField] private float autoYawSpeed = 0.7f; // 水平回転速度
     [SerializeField] private float autoPitchSpeed = 0.5f; // 垂直回転速度
     [SerializeField] private float defaultPitch = 10f; // デフォルトの垂直角度
 
@@ -78,10 +78,14 @@ public class TPSCameraController : MonoBehaviour
     private void HandleMouseInput()
     {
         // マウスおよびコントローラー入力で回転角度を更新
-        float inputX = Input.GetAxis("Mouse X") + Input.GetAxis("RightStickHorizontal");
+        float inputX = Input.GetAxis("Mouse X") + Input.GetAxis("RightStickHorizontal") ;
         float inputY = Input.GetAxis("Mouse Y") + Input.GetAxis("RightStickVertical");
 
-        yaw += inputX * rotationSpeed;
+        // 移動に合わせて､カメラを回転
+        float moveX = Input.GetAxis("Horizontal");
+
+        yaw += inputX * rotationSpeed ;
+        //+ moveX * autoYawSpeed 
         pitch -= inputY * rotationSpeed;
 
         // 垂直方向の回転角度を制限
@@ -90,10 +94,6 @@ public class TPSCameraController : MonoBehaviour
 
     private void AutoAdjustRotation()
     {
-        // 親オブジェクトの向きに自動水平回転
-        float targetYaw = target.eulerAngles.y;
-        yaw = Mathf.LerpAngle(yaw, targetYaw, autoYawSpeed * Time.deltaTime);
-
         // 垂直回転を規定角度に戻す
         pitch = Mathf.Lerp(pitch, defaultPitch, autoPitchSpeed * Time.deltaTime);
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
