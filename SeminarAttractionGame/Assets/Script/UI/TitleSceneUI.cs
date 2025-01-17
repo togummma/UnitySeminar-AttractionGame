@@ -6,13 +6,15 @@ using UnityEngine.UI;
 public class TitleSceneUI : MonoBehaviour
 {
     [SerializeField] private Button mainButton;          // スタート/続きから兼用ボタン
-    [SerializeField] private Button stageSelectButton;   // ステージ選択ボタン
     [SerializeField] private Button exitButton;          // 終了ボタン
+    [SerializeField] private Button stageSelectButton;   // ステージ選択ボタン
+    [SerializeField] private Button settingsButton;      // 設定ボタン
     [SerializeField] private AudioClip BGM;              // タイトルBGM
     [SerializeField] private AudioClip ClickSE;          // ボタンクリックSE
     [SerializeField] private AudioClip SelectSE;         // ボタン選択SE
 
     private bool hasSaveData;                            // セーブデータがあるかどうか
+    private SettingsUIManager settingsUIManager = new SettingsUIManager();         // 設定UIマネージャ
 
     private void Start()
     {
@@ -30,11 +32,13 @@ public class TitleSceneUI : MonoBehaviour
         // ボタンの初期設定
         mainButton.onClick.AddListener(OnMainButtonClicked);
         stageSelectButton.onClick.AddListener(OnStageSelectButtonClicked);
+        settingsButton.onClick.AddListener(OnSettingsButtonClicked);
         exitButton.onClick.AddListener(OnExitButtonClicked);
 
         // ボタンにハイライト時の効果音を追加
         AddHighlightSound(mainButton);
         AddHighlightSound(stageSelectButton);
+        AddHighlightSound(settingsButton);
         AddHighlightSound(exitButton);
 
         Debug.Log(hasSaveData ? "MainButton: Continue Mode" : "MainButton: Start Mode");
@@ -115,6 +119,19 @@ public class TitleSceneUI : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+
+    // 設定画面を開く
+    private void OnSettingsButtonClicked()
+    {
+        if (ClickSE != null)
+        {
+            AudioManager.Instance.PlaySE(ClickSE);
+        }
+
+        Debug.Log("Settings Button Clicked!");
+
+        settingsUIManager.OpenSettings(this.gameObject); // 呼び出し元のUIを渡す
     }
 
     // ボタンにハイライト時の効果音を追加

@@ -13,9 +13,13 @@ public class TPSCameraController : MonoBehaviour
     [SerializeField] private float maxPitch = 60f; // 垂直方向の最大角度
 
     [Header("自動回転設定")]
-    [SerializeField] private float YawSpeed_withHorizontal = 0.7f; // 水平回転速度
     [SerializeField] private float autoPitchSpeed = 0.5f; // 垂直回転速度
     [SerializeField] private float defaultPitch = 10f; // デフォルトの垂直角度
+
+    [Header("簡易操作設定")]
+    [SerializeField] private float EasyYawSpeed = 0.3f; // 水平回転速度
+    [SerializeField] private float smoothingSpeed = 5f; // 入力のスムージング速度
+     private float smoothedInput = 0f; // 入力の生値
 
     private Transform target; // ターゲット（親オブジェクト）
     private float yaw = 0f; // 水平方向の回転角
@@ -122,6 +126,7 @@ public class TPSCameraController : MonoBehaviour
     {
         // 現在の操作モードを取得
         GameSettings.MovementMode newMode = GameSettings.Instance.GetMode();
+        Debug.Log("ControlMode: " + newMode);
         
         // 新しいモードに基づいて処理を変更
         if (newMode == GameSettings.MovementMode.Easy)
@@ -150,9 +155,10 @@ public class TPSCameraController : MonoBehaviour
 
     private void EasyControllCamera()
     {
-        float inputX = Input.GetAxis("Horizontal");
+        float rawInput = Input.GetAxisRaw("Horizontal");
+        smoothedInput = Mathf.Lerp(smoothedInput, rawInput, Time.unscaledDeltaTime * smoothingSpeed);
 
-        yaw += inputX * YawSpeed_withHorizontal;
+        yaw += smoothedInput * EasyYawSpeed;
     }
 
     private void AutoAdjustRotation()

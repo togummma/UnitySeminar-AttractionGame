@@ -1,15 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
+using TMPro;
 
 public class SettingsUI : MonoBehaviour
 {
-    [SerializeField] private Dropdown movementModeDropdown;
-    [SerializeField] private Slider volumeSlider;
     [SerializeField] private Button closeButton;
+    [SerializeField] private TMP_Dropdown movementModeDropdown; // TMP_Dropdown に変更
+    [SerializeField] private Slider volumeSlider;
 
-    private CanvasGroup callerUICanvasGroup; // 呼び出し元のUIのCanvasGroup
-    private GameObject lastSelectedObject; // 元のUIで選択されていたオブジェクト
+    private System.Action onCloseCallback; // 閉じる時のコールバック
 
     private void Start()
     {
@@ -29,7 +28,6 @@ public class SettingsUI : MonoBehaviour
         closeButton.onClick.RemoveListener(CloseSettingsUI);
     }
 
-    // UI初期化
     private void InitializeUI()
     {
         movementModeDropdown.ClearOptions();
@@ -43,39 +41,6 @@ public class SettingsUI : MonoBehaviour
         volumeSlider.value = GameSettings.Instance.GetVolume();
     }
 
-    public void OpenSettingsUI(CanvasGroup callerCanvasGroup)
-    {
-        // 呼び出し元UIの動作を停止
-        callerUICanvasGroup = callerCanvasGroup;
-        callerUICanvasGroup.interactable = false;
-        callerUICanvasGroup.blocksRaycasts = false;
-
-        // フォーカス情報を保存
-        lastSelectedObject = EventSystem.current.currentSelectedGameObject;
-
-        // 設定UIを表示
-        gameObject.SetActive(true);
-    }
-
-    private void CloseSettingsUI()
-    {
-        // 設定UIを非表示
-        gameObject.SetActive(false);
-
-        // 呼び出し元UIの動作を再開
-        if (callerUICanvasGroup != null)
-        {
-            callerUICanvasGroup.interactable = true;
-            callerUICanvasGroup.blocksRaycasts = true;
-        }
-
-        // 呼び出し元UIにフォーカスを戻す
-        if (lastSelectedObject != null)
-        {
-            EventSystem.current.SetSelectedGameObject(lastSelectedObject);
-        }
-    }
-
     private void OnMovementModeChanged(int selectedValue)
     {
         GameSettings.Instance.SetMode((GameSettings.MovementMode)selectedValue);
@@ -84,5 +49,18 @@ public class SettingsUI : MonoBehaviour
     private void OnVolumeChanged(float value)
     {
         GameSettings.Instance.SetVolume(value);
+    }
+
+    private void CloseSettingsUI()
+    {
+        // 設定UIを閉じる
+        onCloseCallback?.Invoke();
+        Destroy(gameObject); // プレハブを破棄
+    }
+
+    public void Show(System.Action onClose = null)
+    {
+        onCloseCallback = onClose;
+        gameObject.SetActive(true);
     }
 }

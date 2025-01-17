@@ -102,9 +102,10 @@ MonoBehaviour:
   rotationSpeed: 5
   minPitch: -30
   maxPitch: 60
-  autoYawSpeed: 0.8
   autoPitchSpeed: 0.5
   defaultPitch: 10
+  EasyYawSpeed: 0.3
+  smoothingSpeed: 5
 --- !u!81 &863520273293322810
 AudioListener:
   m_ObjectHideFlags: 0
