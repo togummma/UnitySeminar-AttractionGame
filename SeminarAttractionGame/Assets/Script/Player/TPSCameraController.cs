@@ -1,5 +1,6 @@
 //マウスカーソルの非表示状態を切り替える役割を暇なとき分離すること!!!
 
+using System;
 using UnityEngine;
 
 public class TPSCameraController : MonoBehaviour
@@ -12,7 +13,7 @@ public class TPSCameraController : MonoBehaviour
     [SerializeField] private float maxPitch = 60f; // 垂直方向の最大角度
 
     [Header("自動回転設定")]
-    [SerializeField] private float autoYawSpeed = 0.7f; // 水平回転速度
+    [SerializeField] private float YawSpeed_withHorizontal = 0.7f; // 水平回転速度
     [SerializeField] private float autoPitchSpeed = 0.5f; // 垂直回転速度
     [SerializeField] private float defaultPitch = 10f; // デフォルトの垂直角度
 
@@ -22,6 +23,8 @@ public class TPSCameraController : MonoBehaviour
 
     private GameStateManager gameStateManager; // 状態管理スクリプトの参照
     private bool isCursorHidden = false; // マウスカーソルの非表示状態を追跡
+    private bool IsCameraControlAllowed = false; // 簡易操作モードかどうか
+    private bool isEasyMode = false; // 簡易操作モードかどうか
 
     private void Start()
     {
@@ -52,44 +55,104 @@ public class TPSCameraController : MonoBehaviour
         UpdateCursorVisibility();
     }
 
+    private void OnEnable()
+    {
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+        }
+
+        if (GameSettings.Instance != null)
+        {
+            GameSettings.Instance.OnSettingsChanged += HandleSettingChange;
+            HandleSettingChange(); // 初期設定を適用
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+
+        if (GameSettings.Instance != null)
+        {
+            GameSettings.Instance.OnSettingsChanged -= HandleSettingChange;
+        }
+    }
+
     private void LateUpdate()
     {
         // ゲーム状態に応じてカメラ操作を制御
-        if (!IsCameraControlAllowed())
+        if (!IsCameraControlAllowed)
         {
             UpdateCursorVisibility(false);
             return; // カメラ操作を許可しない状態
         }
 
         UpdateCursorVisibility(true);
-        HandleMouseInput();
+        NormalControllCamera();
         AutoAdjustRotation();
         UpdateCameraPosition();
+
+        if (isEasyMode)
+        {
+            EasyControllCamera();
+        }
     }
 
-    private bool IsCameraControlAllowed()
+    private void HandleGameStateChanged(GameStateManager.GameState newState)
     {
-        // 許可された状態かどうかを判定
-        return gameStateManager.IsState(GameStateManager.GameState.Ready) ||
-               gameStateManager.IsState(GameStateManager.GameState.StartCountdown) ||
-               gameStateManager.IsState(GameStateManager.GameState.Playing);
+        // ゲーム状態に応じてカメラ操作を制御
+        if (newState == GameStateManager.GameState.Ready ||
+            newState == GameStateManager.GameState.StartCountdown ||
+            newState == GameStateManager.GameState.Playing)
+        {
+            
+            IsCameraControlAllowed = true;
+        }
+        else
+        {
+            IsCameraControlAllowed = false;
+        }
     }
 
-    private void HandleMouseInput()
+    private void HandleSettingChange()
+    {
+        // 現在の操作モードを取得
+        GameSettings.MovementMode newMode = GameSettings.Instance.GetMode();
+        
+        // 新しいモードに基づいて処理を変更
+        if (newMode == GameSettings.MovementMode.Easy)
+        {
+            isEasyMode = true;
+        }
+        else if (newMode != GameSettings.MovementMode.Easy)
+        {
+            isEasyMode = false;
+        }
+        
+    }
+
+    private void NormalControllCamera()
     {
         // マウスおよびコントローラー入力で回転角度を更新
         float inputX = Input.GetAxis("Mouse X") + Input.GetAxis("RightStickHorizontal") ;
         float inputY = Input.GetAxis("Mouse Y") + Input.GetAxis("RightStickVertical");
 
-        // 移動に合わせて､カメラを回転
-        float moveX = Input.GetAxis("Horizontal");
-
         yaw += inputX * rotationSpeed ;
-        //+ moveX * autoYawSpeed 
         pitch -= inputY * rotationSpeed;
 
         // 垂直方向の回転角度を制限
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+    }
+
+    private void EasyControllCamera()
+    {
+        float inputX = Input.GetAxis("Horizontal");
+
+        yaw += inputX * YawSpeed_withHorizontal;
     }
 
     private void AutoAdjustRotation()

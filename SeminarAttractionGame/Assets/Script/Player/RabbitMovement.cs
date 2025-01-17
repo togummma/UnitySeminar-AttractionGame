@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class RabbitMovement : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class RabbitMovement : MonoBehaviour
     private bool isGrounded = true;     // 接地状態
     private bool isStopped = true;      // 停止状態フラグ
     private Vector3 lastJumpDirection;  // 最後のジャンプ方向
+    private Action Movement; // 動的に変更可能な移動処理
 
     private void Start()
     {
@@ -41,6 +43,12 @@ public class RabbitMovement : MonoBehaviour
         {
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
+
+        if (GameSettings.Instance != null)
+        {
+            GameSettings.Instance.OnSettingsChanged += HandleSettingChange;
+            HandleSettingChange(); // 初期設定を適用
+        }
     }
 
     private void OnDisable()
@@ -48,6 +56,11 @@ public class RabbitMovement : MonoBehaviour
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+
+        if (GameSettings.Instance != null)
+        {
+            GameSettings.Instance.OnSettingsChanged -= HandleSettingChange;
         }
     }
 
@@ -63,6 +76,24 @@ public class RabbitMovement : MonoBehaviour
         }
     }
 
+    // 操作モード変更時の処理
+    private void HandleSettingChange()
+    {
+        // 現在のモードを取得
+        GameSettings.MovementMode newMode = GameSettings.Instance.GetMode();
+
+        // 新しいモードに基づいて処理を変更
+        if (newMode == GameSettings.MovementMode.Normal)
+        {
+            Movement = NormalMovement; // Normalモードの移動処理
+        }
+        else if (newMode == GameSettings.MovementMode.Easy)
+        {
+            Movement = EasyMovement; // Easyモードの移動処理
+
+        }
+    }
+
     private void Update()
     {
         if (isStopped) return;
@@ -72,45 +103,63 @@ public class RabbitMovement : MonoBehaviour
 
         if (isGrounded)
         {
-            HandleGroundedMovement();
+            // 接地時の移動処理を実行
+            Movement?.Invoke();
         }
 
         HandleRotation();
     }
 
-   private void HandleGroundedMovement()
+   private void NormalMovement()
+{
+    // 入力ベクトルを取得
+    float horizontal = Input.GetAxis("Horizontal");
+    float vertical = Input.GetAxis("Vertical");
+
+    // カメラ基準で移動方向を計算
+    Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
+
+    // ジャンプ処理を呼び出し
+    PerformJump(moveDirection);
+}
+
+private void EasyMovement()
+{
+    // 縦方向の入力を取得
+    float vertical = Input.GetAxis("Vertical");
+
+    // カメラ基準での移動方向を計算（縦方向のみ）
+    Vector3 moveDirection = (cameraTransform.forward * vertical).normalized;
+
+    // ジャンプ処理を呼び出し
+    PerformJump(moveDirection);
+}
+
+private void PerformJump(Vector3 moveDirection)
+{
+    // isGrounded が true かつ移動方向が有効な場合のみジャンプを実行
+    if (isGrounded && moveDirection != Vector3.zero)
     {
-        // 入力ベクトルを取得
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        // 必要な垂直ジャンプ速度を計算
+        float verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * jumpHeight);
 
-        // カメラ基準で移動方向を計算
-        Vector3 moveDirection = (cameraTransform.forward * vertical + cameraTransform.right * horizontal).normalized;
+        // 水平方向の速度を計算
+        Vector3 horizontalVelocity = moveDirection * moveSpeed;
 
-        // isGroundedがtrueの場合のみジャンプを実行
-        if (isGrounded && moveDirection != Vector3.zero)
-        {
-            // 必要な垂直ジャンプ速度を計算（ジャンプ高さを指定）
-            float verticalVelocity = Mathf.Sqrt(2 * Mathf.Abs(Physics.gravity.y) * jumpHeight);
+        // ジャンプ速度を設定
+        Vector3 jumpVelocity = horizontalVelocity;
+        jumpVelocity.y = verticalVelocity;
 
-            // 水平方向の速度を計算
-            Vector3 horizontalVelocity = moveDirection * moveSpeed;
+        // 現在の速度をリセットして速度を適用
+        rb.velocity = jumpVelocity;
 
-            // ジャンプ速度を設定
-            Vector3 jumpVelocity = horizontalVelocity;
-            jumpVelocity.y = verticalVelocity;
+        // 接地フラグをオフにする
+        isGrounded = false;
 
-            // 現在の速度をリセットして速度を適用
-            rb.velocity = jumpVelocity;
-
-            // 接地フラグをオフにする
-            isGrounded = false;
-
-            // SE再生 (一度のみ再生)
-            AudioManager.Instance.PlaySE(RabbitJumpClip);
-        }
+        // SE 再生 (一度のみ再生)
+        AudioManager.Instance.PlaySE(RabbitJumpClip);
     }
-
+}
 
     private void HandleRotation()
     {
@@ -149,4 +198,5 @@ public class RabbitMovement : MonoBehaviour
             isGrounded = true;
         }
     }
+
 }
