@@ -19,6 +19,7 @@ public class TPSCameraController : MonoBehaviour
     [Header("簡易操作設定")]
     [SerializeField] private float EasyYawSpeed = 0.3f; // 水平回転速度
     [SerializeField] private float smoothingSpeed = 5f; // 入力のスムージング速度
+    [SerializeField] private float EasyYowDeadZone = 0.1f; // 入力のデッドゾーン
      private float smoothedInput = 0f; // 入力の生値
 
     private Transform target; // ターゲット（親オブジェクト）
@@ -156,6 +157,10 @@ public class TPSCameraController : MonoBehaviour
     private void EasyControllCamera()
     {
         float rawInput = Input.GetAxisRaw("Horizontal");
+        if(Mathf.Abs(rawInput) < EasyYowDeadZone)
+        {
+            rawInput = 0f;
+        }
         smoothedInput = Mathf.Lerp(smoothedInput, rawInput, Time.unscaledDeltaTime * smoothingSpeed);
 
         yaw += smoothedInput * EasyYawSpeed;

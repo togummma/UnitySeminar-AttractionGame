@@ -7,6 +7,10 @@ public class SettingsUI : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private TMP_Dropdown movementModeDropdown; // TMP_Dropdown に変更
     [SerializeField] private Slider volumeSlider;
+    [Header ("画像")]
+    [SerializeField] private Image image;
+    [SerializeField] private Sprite NormalModeimage; 
+    [SerializeField] private Sprite EasyModeimage;
 
     private System.Action onCloseCallback; // 閉じる時のコールバック
 
@@ -39,11 +43,13 @@ public class SettingsUI : MonoBehaviour
     {
         movementModeDropdown.value = (int)GameSettings.Instance.GetMode();
         volumeSlider.value = GameSettings.Instance.GetVolume();
+        ModeImage();
     }
 
     private void OnMovementModeChanged(int selectedValue)
     {
         GameSettings.Instance.SetMode((GameSettings.MovementMode)selectedValue);
+        UpdateUIFromSettings();
     }
 
     private void OnVolumeChanged(float value)
@@ -62,5 +68,17 @@ public class SettingsUI : MonoBehaviour
     {
         onCloseCallback = onClose;
         gameObject.SetActive(true);
+    }
+
+    private void ModeImage()
+    {
+        if (GameSettings.Instance.GetMode() == GameSettings.MovementMode.Easy)
+        {
+            image.sprite = EasyModeimage;
+        }
+        else
+        {
+            image.sprite = NormalModeimage;
+        }
     }
 }
