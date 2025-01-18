@@ -1,19 +1,24 @@
 {
     "stages": [
         {
+            "sceneName": "Stage1",
+            "isUnlocked": true,
+            "bestTime": 6.399585723876953
+        },
+        {
             "sceneName": "Test1",
             "isUnlocked": true,
-            "bestTime": 0.219131737947464
+            "bestTime": 0.0
         },
         {
             "sceneName": "Test2",
-            "isUnlocked": true,
-            "bestTime": 13.94930362701416
+            "isUnlocked": false,
+            "bestTime": 0.0
         },
         {
             "sceneName": "Test3",
-            "isUnlocked": true,
-            "bestTime": 25.476356506347658
+            "isUnlocked": false,
+            "bestTime": 0.0
         }
     ]
 }
