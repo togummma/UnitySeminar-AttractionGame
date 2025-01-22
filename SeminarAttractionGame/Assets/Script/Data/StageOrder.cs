@@ -6,8 +6,8 @@ public static class StageOrder
     public static readonly string[] Stages = new string[]
     {
         "Stage1",
-        "Test1",
         "Test2",
-        "Test3"
+        "Test3",
+        "Test1",
     };
 }

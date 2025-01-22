@@ -3,20 +3,20 @@
         {
             "sceneName": "Stage1",
             "isUnlocked": true,
-            "bestTime": 6.399585723876953
+            "bestTime": 19.63833999633789
         },
         {
-            "sceneName": "Test1",
+            "sceneName": "Test2",
             "isUnlocked": true,
             "bestTime": 0.0
         },
         {
-            "sceneName": "Test2",
+            "sceneName": "Test3",
             "isUnlocked": false,
             "bestTime": 0.0
         },
         {
-            "sceneName": "Test3",
+            "sceneName": "Test1",
             "isUnlocked": false,
             "bestTime": 0.0
         }
