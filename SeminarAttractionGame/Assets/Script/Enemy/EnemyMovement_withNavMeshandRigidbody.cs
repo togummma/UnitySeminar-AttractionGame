@@ -1,3 +1,4 @@
+//古い移動ロジックです｡
 using UnityEngine;
 using UnityEngine.AI;
 

@@ -114,6 +114,12 @@ public abstract class EnemyBase : MonoBehaviour
         rb.isKinematic = false;
     }
 
+    // 追加: IsStopped メソッド
+    public bool IsStopped()
+    {
+        return isStopped;
+    }
+
     void OnDrawGizmos()
     {
         if (navMeshAgent == null || navMeshAgent.path == null) return;

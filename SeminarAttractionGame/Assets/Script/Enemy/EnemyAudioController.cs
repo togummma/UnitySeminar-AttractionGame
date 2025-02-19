@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyMovement_withNavMeshandRigidbody))]
 public class EnemyAudioController : MonoBehaviour
 {
     [SerializeField] private AudioClip cryClip; // 鳴き声クリップ
@@ -8,7 +7,7 @@ public class EnemyAudioController : MonoBehaviour
     [SerializeField] private float maxInterval = 15f; // 鳴き声再生の最大間隔
 
     private AudioSource audioSource;
-    private EnemyMovement_withNavMeshandRigidbody movementController;
+    private EnemyBase movementController;
 
     private void Awake()
     {
@@ -21,7 +20,7 @@ public class EnemyAudioController : MonoBehaviour
         audioSource.maxDistance = 20f;
 
         // 移動コントローラーを取得
-        movementController = GetComponent<EnemyMovement_withNavMeshandRigidbody>();
+        movementController = GetComponent<EnemyBase>();
     }
 
     private void Start()
