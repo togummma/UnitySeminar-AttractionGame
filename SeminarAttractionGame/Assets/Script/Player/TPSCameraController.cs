@@ -21,6 +21,11 @@ public class TPSCameraController : MonoBehaviour
     [SerializeField] private float smoothingSpeed = 5f; // 入力のスムージング速度
     [SerializeField] private float EasyYowDeadZone = 0.1f; // 入力のデッドゾーン
      private float smoothedInput = 0f; // 入力の生値
+     private float smoothVelocity = 0f; // SmoothDamp用の補助変数
+
+    [Header("回転速度設定")]
+    [SerializeField] private float mouseRotationSpeed = 5f; // マウスの回転速度
+    [SerializeField] private float controllerRotationSpeed = 5f; // コントローラーの回転速度
 
     private Transform target; // ターゲット（親オブジェクト）
     private float yaw = 0f; // 水平方向の回転角
@@ -144,11 +149,14 @@ public class TPSCameraController : MonoBehaviour
     private void NormalControllCamera()
     {
         // マウスおよびコントローラー入力で回転角度を更新
-        float inputX = Input.GetAxis("Mouse X") + Input.GetAxis("RightStickHorizontal") ;
-        float inputY = Input.GetAxis("Mouse Y") + Input.GetAxis("RightStickVertical");
+        float mouseInputX = Input.GetAxisRaw("Mouse X");
+        float mouseInputY = Input.GetAxisRaw("Mouse Y");
+        float controllerInputX = Input.GetAxisRaw("RightStickHorizontal");
+        float controllerInputY = Input.GetAxisRaw("RightStickVertical");
 
-        yaw += inputX * rotationSpeed ;
-        pitch -= inputY * rotationSpeed;
+        // マウスとコントローラーの入力に応じて回転速度を適用
+        yaw += mouseInputX * mouseRotationSpeed + controllerInputX * controllerRotationSpeed;
+        pitch -= mouseInputY * mouseRotationSpeed + controllerInputY * controllerRotationSpeed;
 
         // 垂直方向の回転角度を制限
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
@@ -157,11 +165,13 @@ public class TPSCameraController : MonoBehaviour
     private void EasyControllCamera()
     {
         float rawInput = Input.GetAxisRaw("Horizontal");
-        if(Mathf.Abs(rawInput) < EasyYowDeadZone)
+        if (Mathf.Abs(rawInput) < EasyYowDeadZone)
         {
             rawInput = 0f;
         }
-        smoothedInput = Mathf.Lerp(smoothedInput, rawInput, Time.unscaledDeltaTime * smoothingSpeed);
+
+        // SmoothDampを使用してスムージング
+        smoothedInput = Mathf.SmoothDamp(smoothedInput, rawInput, ref smoothVelocity, 0.1f, Mathf.Infinity, Time.unscaledDeltaTime);
 
         yaw += smoothedInput * EasyYawSpeed;
     }

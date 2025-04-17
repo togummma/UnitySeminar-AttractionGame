@@ -5,6 +5,9 @@ public class BootGameLastProcess : MonoBehaviour
 {
     private void Start()
     {
+        QualitySettings.vSyncCount = 0; // VSyncオフ
+        Application.targetFrameRate = 60; // 明示的に60FPSに
+
         if (GameStateManager.Instance != null)
         {
             Debug.Log("CountdownStarter Enabled!");

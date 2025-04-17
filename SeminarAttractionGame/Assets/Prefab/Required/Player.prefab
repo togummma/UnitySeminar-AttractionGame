@@ -107,6 +107,8 @@ MonoBehaviour:
   EasyYawSpeed: 0.4
   smoothingSpeed: 4
   EasyYowDeadZone: 0.1
+  mouseRotationSpeed: 5
+  controllerRotationSpeed: 30
 --- !u!81 &863520273293322810
 AudioListener:
   m_ObjectHideFlags: 0
