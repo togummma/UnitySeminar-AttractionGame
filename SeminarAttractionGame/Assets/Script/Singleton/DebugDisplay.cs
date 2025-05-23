@@ -16,7 +16,7 @@ public class InputDebugDisplay : MonoBehaviour
         }
     }
 
-    private bool showDebugInfo = true;
+    private bool showDebugInfo = false;
 
     // FPS計測用
     private List<float> frameTimes = new List<float>();

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -57,6 +58,17 @@ public class UserStageDataHandler
         Debug.Log($"保存データを保存しました: {json}");
     }
 
+    // データを非同期で保存
+    public static async Task SaveDataAsync(GameData data)
+    {
+        string json = JsonUtility.ToJson(data, true);
+        using (StreamWriter writer = new StreamWriter(savePath, false))
+        {
+            await writer.WriteAsync(json);
+        }
+        Debug.Log($"保存データを保存しました: {json}");
+    }
+
     // データを読み込み
     public static GameData LoadData()
     {
@@ -65,6 +77,23 @@ public class UserStageDataHandler
             string json = File.ReadAllText(savePath);
             Debug.Log($"保存データをロード: {json}");
             return JsonUtility.FromJson<GameData>(json);
+        }
+
+        Debug.Log("保存データが存在しません！");
+        return null;
+    }
+
+    // データを非同期で読み込み
+    public static async Task<GameData> LoadDataAsync()
+    {
+        if (File.Exists(savePath))
+        {
+            using (StreamReader reader = new StreamReader(savePath))
+            {
+                string json = await reader.ReadToEndAsync();
+                Debug.Log($"保存データをロード: {json}");
+                return JsonUtility.FromJson<GameData>(json);
+            }
         }
 
         Debug.Log("保存データが存在しません！");
