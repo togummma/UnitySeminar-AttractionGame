@@ -5,11 +5,9 @@ public abstract class EnemyBase : MonoBehaviour
 {
     protected NavMeshAgent navMeshAgent;
     protected Rigidbody rb;
-
-    [SerializeField]
-    protected float moveSpeed = 7.0f; // デフォルトの移動速度
-    [SerializeField]
-    protected float rotationSpeed = 1000f; // デフォルトの回転速度 (度/秒)
+    protected Animator animator; // アニメーターコンポーネント
+    [SerializeField] protected float moveSpeed = 7.0f; // デフォルトの移動速度
+    [SerializeField]    protected float rotationSpeed = 1000f; // デフォルトの回転速度 (度/秒)
 
     private bool isStopped = false;
 
@@ -23,6 +21,9 @@ public abstract class EnemyBase : MonoBehaviour
         rb.isKinematic = false;
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        animator = GetComponent<Animator>();
+
     }
 
     void OnEnable()
@@ -55,11 +56,15 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void Update()
     {
+        // Update() 内か FixedUpdate() の中に追加（どちらでもOK）
+        float speed = rb.velocity.magnitude;
+        animator.SetFloat("MoveSpeed", speed);
+
         if (!isStopped)
         {
             Vector3 targetPosition = PlayerPositionProvider.GetPlayerPosition();
             navMeshAgent.SetDestination(targetPosition);
-        }
+        }  
     }
 
     void FixedUpdate()
@@ -105,6 +110,8 @@ public abstract class EnemyBase : MonoBehaviour
         }
 
         rb.isKinematic = true;
+        animator.SetTrigger("Sitdown"); // ← 座るトリガー
+
     }
 
     public void Move()
